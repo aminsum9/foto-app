@@ -28,11 +28,11 @@ class AccountState extends State<Account> {
     String user = await handle_storage.getDataStorage('user');
 
     setState(() {
-      dataUser = jsonDecode(user);
-      userName =
-          jsonDecode(user)?['name'] != null ? jsonDecode(user)['name'] : 'User';
-      userEmail = jsonDecode(user)['email'];
-      accountType = jsonDecode(user)['account_type'];
+      // dataUser = jsonDecode(user);
+      // userName =
+      //     jsonDecode(user)?['name'] != null ? jsonDecode(user)['name'] : 'User';
+      // userEmail = jsonDecode(user)['email'];
+      // accountType = jsonDecode(user)['account_type'];
     });
   }
 

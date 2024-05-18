@@ -38,6 +38,9 @@ dependencies:
   webview_flutter: ^4.7.0
   shared_preferences: ^2.2.3
   http: ^1.2.1
+  carousel_slider: ^4.2.1
+  youtube_player_flutter: ^9.0.1
+  bulleted_list: ^0.0.1+0.1a
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +67,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/logo/
+    - assets/images/hero/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

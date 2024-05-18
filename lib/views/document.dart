@@ -11,14 +11,14 @@ import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+class Document extends StatefulWidget {
+  const Document({super.key});
 
   @override
-  DashboardState createState() => DashboardState();
+  DocumentState createState() => DocumentState();
 }
 
-class DashboardState extends State<Dashboard> {
+class DocumentState extends State<Document> {
   late dynamic dataUser;
   String userName = '';
   String accountType = '';
@@ -103,9 +103,9 @@ class DashboardState extends State<Dashboard> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Hi, $userName',
-                          style: const TextStyle(
+                        const Text(
+                          '',
+                          style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 40),
                         ),
                         Container(
@@ -212,39 +212,5 @@ class DashboardState extends State<Dashboard> {
                 )),
           ),
         ));
-  }
-}
-
-class ButtonUpgradeAccType extends StatefulWidget {
-  @override
-  ButtonUpgradeAccTypeState createState() => ButtonUpgradeAccTypeState();
-  final String title;
-  final Function() onClick;
-
-  @override
-  const ButtonUpgradeAccType(
-      {super.key, required this.onClick, required this.title});
-}
-
-class ButtonUpgradeAccTypeState extends State<ButtonUpgradeAccType> {
-  // ignore: empty_constructor_bodies
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => widget.onClick(),
-      child: Container(
-        margin: const EdgeInsets.only(left: 10),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: Colors.black, borderRadius: BorderRadius.circular(10)),
-        child: Align(
-          child: Text(
-            widget.title,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white, fontSize: 10),
-          ),
-        ),
-      ),
-    );
   }
 }

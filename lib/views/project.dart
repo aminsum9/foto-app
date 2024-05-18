@@ -11,14 +11,14 @@ import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+class Project extends StatefulWidget {
+  const Project({super.key});
 
   @override
-  DashboardState createState() => DashboardState();
+  ProjectState createState() => ProjectState();
 }
 
-class DashboardState extends State<Dashboard> {
+class ProjectState extends State<Project> {
   late dynamic dataUser;
   String userName = '';
   String accountType = '';

@@ -1,6 +1,8 @@
 import 'package:foto_app/views/account.dart';
 import 'package:foto_app/views/dashboard.dart';
+import 'package:foto_app/views/document.dart';
 import 'package:foto_app/views/home.dart';
+import 'package:foto_app/views/project.dart';
 import 'package:foto_app/views/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:foto_app/styles/colors.dart' as colors;
@@ -58,6 +60,8 @@ class RouterState extends State<RouterApp> with TickerProviderStateMixin {
             routes: {
               '/home': (context) => const Home(),
               '/dashboard': (context) => const Dashboard(),
+              '/document': (context) => const Document(),
+              '/project': (context) => const Project(),
               '/account': (context) => const Account(),
             }));
   }

@@ -2,6 +2,8 @@ import 'package:foto_app/views/account.dart';
 import 'package:foto_app/views/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:foto_app/styles/colors.dart' as colors;
+import 'package:foto_app/views/document.dart';
+import 'package:foto_app/views/project.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -16,7 +18,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -26,6 +28,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         controller: _tabController,
         children: const [
           Dashboard(),
+          Document(),
+          Project(),
           Account(),
         ],
       ),
@@ -41,6 +45,20 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 "Home",
                 style: TextStyle(fontSize: 11),
                 textAlign: TextAlign.center,
+              ),
+            ),
+            Tab(
+              icon: Icon(Icons.document_scanner_outlined),
+              child: Text(
+                "Dokumen",
+                style: TextStyle(fontSize: 11),
+              ),
+            ),
+            Tab(
+              icon: Icon(Icons.gif_box_rounded),
+              child: Text(
+                "Projek",
+                style: TextStyle(fontSize: 11),
               ),
             ),
             Tab(
