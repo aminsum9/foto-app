@@ -41,6 +41,7 @@ dependencies:
   carousel_slider: ^4.2.1
   youtube_player_flutter: ^9.0.1
   bulleted_list: ^0.0.1+0.1a
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,8 @@ flutter:
   assets:
     - assets/images/logo/
     - assets/images/hero/
+    - assets/images/icon/
+    - assets/images/gallery/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

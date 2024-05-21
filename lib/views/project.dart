@@ -103,11 +103,6 @@ class ProjectState extends State<Project> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Hi, $userName',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 40),
-                        ),
                         Container(
                           padding: const EdgeInsets.all(10),
                           margin: const EdgeInsets.only(left: 15),
@@ -119,95 +114,9 @@ class ProjectState extends State<Project> {
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
-                        Image.asset(
-                          "assets/images/logo/humas.png",
-                          width: 30,
-                          height: 30,
-                        )
                       ],
                     ),
                     const Padding(padding: EdgeInsets.only(bottom: 20)),
-                    SizedBox(
-                      width: screenWidth,
-                      child: CarouselSlider(
-                          options: CarouselOptions(
-                            viewportFraction: 1.0,
-                            enlargeCenterPage: false,
-                            initialPage: 0,
-                            height: 200.0,
-                            enableInfiniteScroll: false,
-                          ),
-                          items: [
-                            Container(
-                              width: screenWidth,
-                              color: Colors.white,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Image.asset(
-                                'assets/images/hero/home.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Container(
-                              width: screenWidth,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: YoutubePlayer(
-                                controller: _controller,
-                                showVideoProgressIndicator: true,
-                                progressIndicatorColor: Colors.blueAccent,
-                                topActions: <Widget>[
-                                  const SizedBox(width: 8.0),
-                                  Expanded(
-                                    child: Text(
-                                      _controller.metadata.title,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18.0,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.settings,
-                                      color: Colors.white,
-                                      size: 25.0,
-                                    ),
-                                    onPressed: () {
-                                      print('Settings Tapped!');
-                                    },
-                                  ),
-                                ],
-                                onReady: () {},
-                                onEnded: (data) {},
-                              ),
-                            ),
-                          ]),
-                    ),
-                    const Padding(padding: EdgeInsets.only(bottom: 20)),
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Visi'),
-                        Padding(padding: EdgeInsets.only(bottom: 20)),
-                        Text(
-                            'Terwujudnya komunikasi publik bidang Humas yang prediktif, Responsibilitas, transparansi dan berkeadilan yang mantap menuju masyarakat yang aman dan tertib.')
-                      ],
-                    ),
-                    const Padding(padding: EdgeInsets.only(bottom: 20)),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Misi'),
-                        const Padding(padding: EdgeInsets.only(bottom: 20)),
-                        BulletedList(
-                          listItems: listMissions,
-                          listOrder: ListOrder.ordered,
-                        ),
-                      ],
-                    )
                   ],
                 )),
           ),
