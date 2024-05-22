@@ -2,7 +2,9 @@ import 'package:foto_app/views/account.dart';
 import 'package:foto_app/views/dashboard.dart';
 import 'package:foto_app/views/document.dart';
 import 'package:foto_app/views/home.dart';
+import 'package:foto_app/views/login.dart';
 import 'package:foto_app/views/project.dart';
+import 'package:foto_app/views/register.dart';
 import 'package:foto_app/views/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:foto_app/styles/colors.dart' as colors;
@@ -58,6 +60,9 @@ class RouterState extends State<RouterApp> with TickerProviderStateMixin {
                   colors.primary, // outdated and has no effect to Tabbar
             ),
             routes: {
+              '/splash': (context) => const Splash(),
+              '/login': (context) => const Login(),
+              '/register': (context) => const Register(),
               '/home': (context) => const Home(),
               '/dashboard': (context) => const Dashboard(),
               '/document': (context) => const Document(),

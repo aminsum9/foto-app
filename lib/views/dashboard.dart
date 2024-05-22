@@ -378,8 +378,9 @@ class DashboardState extends State<Dashboard> {
                           children: [
                             Image.asset(
                               'assets/images/gallery/DHE08577.jpg',
+                              fit: BoxFit.cover,
                               width: screenWidth,
-                              height: 100,
+                              height: 200,
                             ),
                             const Padding(padding: EdgeInsets.only(bottom: 10)),
                             const Text(

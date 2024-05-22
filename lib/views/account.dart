@@ -13,10 +13,9 @@ class Account extends StatefulWidget {
 }
 
 class AccountState extends State<Account> {
-  late dynamic dataUser;
+  dynamic dataUser;
   String userName = '';
   String userEmail = '';
-  String accountType = '';
 
   @override
   void initState() {
@@ -28,18 +27,16 @@ class AccountState extends State<Account> {
     String user = await handle_storage.getDataStorage('user');
 
     setState(() {
-      // dataUser = jsonDecode(user);
-      // userName =
-      //     jsonDecode(user)?['name'] != null ? jsonDecode(user)['name'] : 'User';
-      // userEmail = jsonDecode(user)['email'];
-      // accountType = jsonDecode(user)['account_type'];
+      dataUser = jsonDecode(user);
+      userName = dataUser != null ? jsonDecode(user)['nama'] : 'User';
+      userEmail = dataUser != null ? jsonDecode(user)['username'] : "";
     });
   }
 
   void handleLogOut() async {
     await handle_storage.deleteAllStorage();
     // ignore: use_build_context_synchronously
-    Navigator.pushNamed(context, '/wellcome');
+    Navigator.pushNamed(context, '/splash');
   }
 
   @override
@@ -84,7 +81,20 @@ class AccountState extends State<Account> {
                     ],
                   ),
                 ),
-                ButtonList(onClick: () => handleLogOut(), title: 'Keluar')
+                Visibility(
+                    visible: dataUser == null,
+                    child: Column(
+                      children: [
+                        ButtonList(
+                            onClick: () =>
+                                Navigator.pushNamed(context, '/login'),
+                            title: 'Masuk'),
+                      ],
+                    )),
+                Visibility(
+                    visible: dataUser != null,
+                    child: ButtonList(
+                        onClick: () => handleLogOut(), title: 'Keluar'))
               ],
             ),
           )),
