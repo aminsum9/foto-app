@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:bulleted_list/bulleted_list.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
 import 'package:foto_app/widgets/button_regular.dart';
 import 'package:flutter/material.dart';
 import 'package:foto_app/functions/host.dart' as host;
