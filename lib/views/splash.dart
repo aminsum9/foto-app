@@ -29,8 +29,8 @@ class SplashState extends State<Splash> with TickerProviderStateMixin {
               (response) async {
         if (response.statusCode == 200) {
           if (jsonDecode(response.body)['success'] == true) {
-            await handle_storage.saveDataStorage('token',
-                jsonDecode(response.body)['data']['app_token'].toString());
+            await handle_storage.saveDataStorage(
+                'token', jsonDecode(response.body)['token'].toString());
             await handle_storage.saveDataStorage(
                 'user', jsonEncode(jsonDecode(response.body)['data']));
 

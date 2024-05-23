@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:foto_app/widgets/button_list.dart';
 import 'package:flutter/material.dart';
 import 'package:foto_app/styles/colors.dart' as colors;
+import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
+import 'package:foto_app/functions/handle_request.dart' as handle_request;
 
 class Account extends StatefulWidget {
   const Account({super.key});
@@ -34,9 +36,23 @@ class AccountState extends State<Account> {
   }
 
   void handleLogOut() async {
-    await handle_storage.deleteAllStorage();
-    // ignore: use_build_context_synchronously
-    Navigator.pushNamed(context, '/splash');
+    handle_request.postData(Uri.parse('${host.BASE_URL}user/logout'), {}).then(
+        (response) async {
+      print("ress status code: ${response.statusCode.toString()}");
+      if (response.statusCode == 200) {
+        print(
+            "ress success: ${jsonDecode(response.body)['success'].toString()}");
+        if (jsonDecode(response.body)['success'] == true) {
+          await handle_storage.deleteAllStorage();
+          // ignore: use_build_context_synchronously
+          Navigator.pushNamed(context, '/splash');
+        } else {
+          //
+        }
+      } else {
+        //
+      }
+    });
   }
 
   @override
