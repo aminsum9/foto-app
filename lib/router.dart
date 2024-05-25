@@ -56,8 +56,7 @@ class RouterState extends State<RouterApp> with TickerProviderStateMixin {
                   indicator: UnderlineTabIndicator(
                       // color for indicator (underline)
                       borderSide: BorderSide(color: Colors.white))),
-              primaryColor:
-                  colors.primary, // outdated and has no effect to Tabbar
+              primaryColor: colors.primary,
             ),
             routes: {
               '/splash': (context) => const Splash(),
