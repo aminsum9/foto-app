@@ -141,9 +141,8 @@ class AddWarehouseState extends State<AddDocument> {
     return prefs.getString(key).toString();
   }
 
-  void addDataDocument() async {
+  void addDataDocument(BuildContext context) async {
     var token = await getDataStorage('token');
-    var partnerId = await getDataStorage('partner_id');
 
     var url = Uri.parse("${host.BASE_URL}document/add");
 
@@ -156,16 +155,25 @@ class AddWarehouseState extends State<AddDocument> {
     var dataImageFoto5 = imageFoto5;
     var dataImageFoto6 = imageFoto6;
 
+    String idCategory = "0";
+
+    for (var e in listCategories) {
+      if (e.kategori == selectedCategory) {
+        idCategory = e.id.toString();
+      }
+    }
+
     var request = http.MultipartRequest("POST", url);
 
     request.headers["Authorization"] = 'Bearer $token';
+    request.headers["Content-Type"] = 'multipart/form-data';
 
     request.fields['pembuat'] = controllerPembuat.text;
-    request.fields['judul'] = controllerJudul.text.toString();
-    request.fields['link'] = controllerLink.text.toString();
-    request.fields['ringkasan'] = controllerSummary.text.toString();
     request.fields['tanggal'] = documentDate.toString().split(' ')[0];
-    request.fields['partner_id'] = partnerId;
+    request.fields['judul'] = controllerJudul.text.toString();
+    request.fields['ringkasan'] = controllerSummary.text.toString();
+    request.fields['kategori'] = idCategory;
+    request.fields['link'] = controllerLink.text.toString();
 
     if (dataImageFoto.path != "") {
       request.files.add(await http.MultipartFile.fromPath(
@@ -220,14 +228,11 @@ class AddWarehouseState extends State<AddDocument> {
       if (decodedMap['success']) {
         //kadang error karena ditambah pengondisian respnse success
         showDialog<void>(
-          // ignore: duplicate_ignore
-          // ignore: use_build_context_synchronously
           context: context,
-          barrierDismissible: false, // user must tap button!
-          builder: (BuildContext context) {
+          barrierDismissible: false,
+          builder: (BuildContext contextt) {
             return AlertDialog(
               title: const Text('Berhasil menambah dokumen baru.'),
-              // content: Text(jsonDecode(response.toString())['message']),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.pushNamed(context, '/home'),
@@ -242,7 +247,7 @@ class AddWarehouseState extends State<AddDocument> {
         showDialog<void>(
           context: context,
           barrierDismissible: false, // user must tap button!
-          builder: (BuildContext context) {
+          builder: (BuildContext contextt) {
             return AlertDialog(
               title: const Text('Gagal menambah dokumen'),
               content: Text(decodedMap['message']),
@@ -261,9 +266,9 @@ class AddWarehouseState extends State<AddDocument> {
       showDialog<void>(
         context: context,
         barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
+        builder: (BuildContext contextt) {
           return AlertDialog(
-            title: const Text('Gagal melakukan transaksi!'),
+            title: const Text('Gagal menambah dokumen!'),
             content: const Text("Terjadi kesalahan pada server."),
             actions: <Widget>[
               TextButton(
@@ -297,6 +302,10 @@ class AddWarehouseState extends State<AddDocument> {
 
         ressData.add(CategoryModel.fromJson(itemCategory));
       }
+
+      setState(() {
+        listCategories = ressData;
+      });
 
       List<String> listCategoriesString = [];
 
@@ -361,7 +370,6 @@ class AddWarehouseState extends State<AddDocument> {
                 ),
                 TextField(
                   controller: controllerJudul,
-                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       hintText: "masukkan judul",
                       labelText: "Judul",
@@ -373,7 +381,6 @@ class AddWarehouseState extends State<AddDocument> {
                 ),
                 TextField(
                   controller: controllerLink,
-                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       hintText: "masukkan link",
                       labelText: "Link",
@@ -385,7 +392,6 @@ class AddWarehouseState extends State<AddDocument> {
                 ),
                 TextField(
                   controller: controllerSummary,
-                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       hintText: "masukkan ringkasan",
                       labelText: "Ringkasan",
@@ -712,7 +718,7 @@ class AddWarehouseState extends State<AddDocument> {
         margin: const EdgeInsets.only(left: 16, right: 16, bottom: 10),
         child: TextButton(
           onPressed: () {
-            addDataDocument();
+            addDataDocument(context);
           },
           style: TextButton.styleFrom(
               shape: RoundedRectangleBorder(

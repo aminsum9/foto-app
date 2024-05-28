@@ -4,6 +4,7 @@ import 'package:foto_app/models/document_model.dart';
 import 'package:flutter/material.dart';
 import 'package:foto_app/widgets/regular_header.dart';
 import 'package:foto_app/views/detaildocument.dart';
+import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,6 +30,7 @@ Future<http.Response> postData(Uri url, dynamic body) async {
 
 class DocumentState extends State<Document> {
   List<DocumentModel> data = [];
+  bool? isUserLogin;
 
   @override
   void initState() {
@@ -38,9 +40,11 @@ class DocumentState extends State<Document> {
 
   void getData() async {
     List<DocumentModel> dataTrans = await getDataDocument();
+    String token = await handle_storage.getDataStorage('token');
 
     setState(() {
       data = dataTrans;
+      isUserLogin = token != '';
     });
   }
 
@@ -85,12 +89,14 @@ class DocumentState extends State<Document> {
         canPop: false,
         child: SafeArea(
             child: Scaffold(
-                floatingActionButton: FloatingActionButton(
-                  onPressed: () =>
-                      Navigator.pushNamed(context, '/add_document'),
-                  backgroundColor: Colors.white,
-                  child: const Icon(Icons.add),
-                ),
+                floatingActionButton: isUserLogin == true
+                    ? FloatingActionButton(
+                        onPressed: () =>
+                            Navigator.pushNamed(context, '/add_document'),
+                        backgroundColor: Colors.white,
+                        child: const Icon(Icons.add),
+                      )
+                    : null,
                 body: Column(
                   children: [
                     RegularHeader(title: 'Dokumen'),
