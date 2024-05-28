@@ -87,7 +87,7 @@ class DocumentState extends State<Document> {
             child: Scaffold(
                 floatingActionButton: FloatingActionButton(
                   onPressed: () =>
-                      Navigator.pushNamed(context, '/add_transaksi'),
+                      Navigator.pushNamed(context, '/add_document'),
                   backgroundColor: Colors.white,
                   child: const Icon(Icons.add),
                 ),
