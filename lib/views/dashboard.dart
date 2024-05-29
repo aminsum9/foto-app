@@ -3,7 +3,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:foto_app/widgets/button_regular.dart';
 import 'package:flutter/material.dart';
-import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
