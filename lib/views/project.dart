@@ -1,13 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
-
-import 'package:bulleted_list/bulleted_list.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:foto_app/widgets/button_regular.dart';
 import 'package:flutter/material.dart';
-import 'package:foto_app/functions/host.dart' as host;
+import 'package:foto_app/models/project_model.dart';
+import 'package:foto_app/views/detailproject.dart';
+import 'package:foto_app/widgets/regular_header.dart';
+import 'package:foto_app/views/detaildocument.dart';
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
-import 'package:foto_app/functions/handle_request.dart' as handle_request;
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:foto_app/functions/host.dart' as host;
 
 class Project extends StatefulWidget {
   const Project({super.key});
@@ -16,139 +18,157 @@ class Project extends StatefulWidget {
   ProjectState createState() => ProjectState();
 }
 
+Future<String> getDataStorage(String key) async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString(key).toString();
+}
+
+Future<http.Response> postData(Uri url, dynamic body) async {
+  final response = await http.post(url, body: body);
+  return response;
+}
+
 class ProjectState extends State<Project> {
-  late dynamic dataUser;
-  String userName = '';
-  String accountType = '';
-  int userBallance = 0;
-  late YoutubePlayerController _controller;
-  late TextEditingController _idController;
-  late TextEditingController _seekToController;
-
-  late PlayerState _playerState;
-  late YoutubeMetaData _videoMetaData;
-  bool _isPlayerReady = false;
-
-  final List<String> listMissions = [
-    'Pelayanan presisi dengan cara memberikan informasi dengan cepat dan tepat serta akurat kepada instansi internal dan eksternal serta masyarakat.',
-    'Mengadakan koordinasi dengan pihak terkait antara lain dengan instansi Pemerintah, Perguruan tinggi wilayah Yogyakarta baik negeri maupun swasta, Komisi Informasi DIY, Aliansi Jurnalistik Indonesia (AJI) cabang Yogyakarta, Persatuan Wartawan Indonesia (PWI) cabang Yogyakarta, media massa dan kerjasama dalam pembuatan majalah Tribrata News.',
-    'Sebagai cyber public relations posture yang memberikan pelayanan informasi data digital kepada internal Kepolisian dan masyarakat serta memberikan pelayanan dengan cepat dan tepat sehingga tercapai kepercayaan publik dalam manajemen media.'
-  ];
+  List<ProjectModel> data = [];
+  bool? isUserLogin;
 
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController(
-      initialVideoId: 'sa3hshEEMuo',
-      flags: const YoutubePlayerFlags(
-        mute: false,
-        autoPlay: false,
-        disableDragSeek: false,
-        loop: false,
-        isLive: false,
-        forceHD: false,
-        enableCaption: true,
-      ),
-    )..addListener(listener);
-    _idController = TextEditingController();
-    _seekToController = TextEditingController();
-    _videoMetaData = const YoutubeMetaData();
-    _playerState = PlayerState.unknown;
+    getData();
   }
 
-  void listener() {
-    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
-      setState(() {
-        _playerState = _controller.value.playerState;
-        _videoMetaData = _controller.metadata;
-      });
+  void getData() async {
+    List<ProjectModel> dataTrans = await getDataDocument();
+    String token = await handle_storage.getDataStorage('token');
+
+    setState(() {
+      data = dataTrans;
+      isUserLogin = token != '';
+    });
+  }
+
+  Future<List<ProjectModel>> getDataDocument() async {
+    var body = {"page": "1", "paging": "10"};
+
+    final response = await postData(Uri.parse("${host.BASE_URL}project"), body);
+
+    if (response.statusCode != 200) {
+      return [];
+    }
+
+    var data = await jsonDecode(response.body);
+
+    List<ProjectModel> ressData = [];
+
+    if (data['success'] == true) {
+      for (var i = 0; i < data['data']['data'].length; i++) {
+        dynamic itemProject = data['data']['data'][i];
+
+        ressData.add(ProjectModel.fromJson(itemProject));
+      }
+
+      return ressData;
+    } else {
+      return ressData;
     }
   }
 
-  void upgradeAccountType() async {
-    Navigator.pushNamed(context, '/upgrade_premium');
+  Future<void> _handleRefresh() async {
+    List<ProjectModel> dataTrans = await getDataDocument();
+
+    setState(() {
+      data = dataTrans;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    Color accTypeColor = Colors.white;
-    String accTypeText = '';
-
-    if (accountType == 'reguler') {
-      accTypeColor = Colors.green;
-      accTypeText = 'Reguler';
-    } else if (accountType == 'premium') {
-      accTypeColor = Colors.blue;
-      accTypeText = 'Premium';
-    } else if (accountType == 'silver') {
-      accTypeColor = Colors.grey;
-      accTypeText = 'Silver';
-    } else if (accountType == 'gold') {
-      accTypeColor = Colors.orange;
-      accTypeText = 'Gold';
-    }
-
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return PopScope(
         canPop: false,
-        child: Scaffold(
-          body: SafeArea(
-            child: Container(
-                padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
-                child: ListView(
+        child: SafeArea(
+            child: Scaffold(
+                floatingActionButton: isUserLogin == true
+                    ? FloatingActionButton(
+                        onPressed: () =>
+                            Navigator.pushNamed(context, '/add_project'),
+                        backgroundColor: Colors.white,
+                        child: const Icon(Icons.add),
+                      )
+                    : null,
+                body: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.only(left: 15),
-                          decoration: BoxDecoration(
-                              color: accTypeColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Text(
-                            accTypeText,
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                    RegularHeader(title: 'Projek'),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height - 200,
+                      child: RefreshIndicator(
+                        onRefresh: () => _handleRefresh(),
+                        child: ListView.separated(
+                          padding: const EdgeInsets.all(8),
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            return ItemProject(
+                                item: data[index],
+                                nama: data[index].nama as String,
+                                fotografer: data[index].fotografer as String,
+                                createdAt: data[index].createdAt as String,
+                                index: index);
+                          },
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(),
                         ),
-                      ],
-                    ),
-                    const Padding(padding: EdgeInsets.only(bottom: 20)),
+                      ),
+                    )
                   ],
-                )),
-          ),
-        ));
+                ))));
   }
 }
 
-class ButtonUpgradeAccType extends StatefulWidget {
-  @override
-  ButtonUpgradeAccTypeState createState() => ButtonUpgradeAccTypeState();
-  final String title;
-  final Function() onClick;
+// ignore: must_be_immutable
+class ItemProject extends StatelessWidget {
+  String nama = '';
+  String fotografer = '';
+  String createdAt = '';
+  ProjectModel item;
+  int index = 0;
 
-  @override
-  const ButtonUpgradeAccType(
-      {super.key, required this.onClick, required this.title});
-}
+  ItemProject(
+      {super.key,
+      required this.item,
+      required this.nama,
+      required this.fotografer,
+      required this.createdAt,
+      required this.index});
 
-class ButtonUpgradeAccTypeState extends State<ButtonUpgradeAccType> {
-  // ignore: empty_constructor_bodies
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => widget.onClick(),
-      child: Container(
-        margin: const EdgeInsets.only(left: 10),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: Colors.black, borderRadius: BorderRadius.circular(10)),
-        child: Align(
-          child: Text(
-            widget.title,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white, fontSize: 10),
+    var now = DateTime.now().toString();
+    var date = createdAt != ''
+        ? DateTime.parse(createdAt.split('T')[0])
+        : DateTime.parse(now.split('T')[0]);
+    String projectCreatedAt = DateFormat('dd MMMM yyy').format(date);
+
+    return SizedBox(
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) =>
+                DetailProject(project: item, index: index))),
+        child: Card(
+          child: ListTile(
+            title: Row(
+              children: [
+                Text(
+                  fotografer,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            subtitle: Text('Dibuat tgl. : $projectCreatedAt'),
+            leading: const Icon(
+              Icons.build_circle,
+              size: 40,
+              color: Colors.blueGrey,
+            ),
           ),
         ),
       ),

@@ -1,33 +1,32 @@
-import 'package:foto_app/models/document_model.dart';
 import 'package:flutter/material.dart';
+import 'package:foto_app/models/project_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
 
 // ignore: must_be_immutable
-class DetailDocument extends StatefulWidget {
-  DocumentModel document;
+class DetailProject extends StatefulWidget {
+  ProjectModel project;
   int index;
 
-  DetailDocument({super.key, required this.document, required this.index});
+  DetailProject({super.key, required this.project, required this.index});
 
   @override
-  DetailDocumentState createState() => DetailDocumentState();
+  DetailProjectState createState() => DetailProjectState();
 }
 
-class DetailDocumentState extends State<DetailDocument> {
-  DocumentModel? documentData;
-  List<Widget> fotoList = [];
+class DetailProjectState extends State<DetailProject> {
+  ProjectModel? projectData;
 
   void confirmDelete() {
     showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Hapus Dokument?'),
+          title: const Text('Hapus Projek?'),
           content: Text(
-              "Apakah anda yakin ingin menghapus dokumen '${widget.document.judul}'?"),
+              "Apakah anda yakin ingin menghapus dokumen '${widget.project.nama}'?"),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -36,7 +35,7 @@ class DetailDocumentState extends State<DetailDocument> {
             TextButton(
               child: const Text('HAPUS', style: TextStyle(color: Colors.red)),
               onPressed: () {
-                deleteData();
+                deleteData(widget.project);
               },
             ),
           ],
@@ -55,10 +54,10 @@ class DetailDocumentState extends State<DetailDocument> {
     return prefs.getString(key).toString();
   }
 
-  void deleteData() async {
-    dynamic body = {"page": 1, "paging": 10};
+  void deleteData(ProjectModel project) async {
+    dynamic body = {"id": project.id};
 
-    var url = "${host.BASE_URL}document/delete";
+    var url = "${host.BASE_URL}project/delete";
 
     handle_request.postData(Uri.parse(url), body).then((response) =>
         {Navigator.pop(context, true), Navigator.pop(context, true)});
@@ -69,7 +68,7 @@ class DetailDocumentState extends State<DetailDocument> {
     return Scaffold(
         appBar: AppBar(
             title: Text(
-              "${widget.document.judul}",
+              "${widget.project.nama}",
               style: const TextStyle(color: Colors.black),
             ),
             backgroundColor: Colors.white,
@@ -93,7 +92,7 @@ class DetailDocumentState extends State<DetailDocument> {
                         padding: EdgeInsets.all(15.0),
                       ),
                       Text(
-                        widget.document.judul as String,
+                        widget.project.nama as String,
                         style: const TextStyle(
                             fontSize: 20.0,
                             color: Colors.black,
@@ -110,13 +109,13 @@ class DetailDocumentState extends State<DetailDocument> {
                               Row(
                                 children: [
                                   const Text(
-                                    "Ketegori         : ",
+                                    "Nama            : ",
                                     style: TextStyle(
                                         fontSize: 17.0,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    "${widget.document.kategori}",
+                                    "${widget.project.nama}",
                                     style: const TextStyle(fontSize: 17.0),
                                   ),
                                 ],
@@ -124,13 +123,13 @@ class DetailDocumentState extends State<DetailDocument> {
                               Row(
                                 children: [
                                   const Text(
-                                    "Link     : ",
+                                    "Fotografer    : ",
                                     style: TextStyle(
                                         fontSize: 17.0,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    widget.document.link as String,
+                                    widget.project.fotografer as String,
                                     style: const TextStyle(fontSize: 17.0),
                                   ),
                                 ],
@@ -138,45 +137,17 @@ class DetailDocumentState extends State<DetailDocument> {
                               Row(
                                 children: [
                                   const Text(
-                                    "Foto           : ",
+                                    "Videografer  : ",
                                     style: TextStyle(
                                         fontSize: 17.0,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    widget.document.foto as String,
+                                    widget.project.videografer as String,
                                     style: const TextStyle(fontSize: 17.0),
                                   ),
                                 ],
                               ),
-                              Row(
-                                children: [
-                                  const Text(
-                                    "Dibuat oleh :",
-                                    style: TextStyle(
-                                        fontSize: 17.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    "${widget.document.pembuat}",
-                                    style: const TextStyle(fontSize: 17.0),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  const Text(
-                                    "Ringkasan      : ",
-                                    style: TextStyle(
-                                        fontSize: 17.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    widget.document.ringkasan as String,
-                                    style: const TextStyle(fontSize: 17.0),
-                                  ),
-                                ],
-                              )
                             ]),
                       ),
                       const Padding(
@@ -189,10 +160,6 @@ class DetailDocumentState extends State<DetailDocument> {
                       ),
                       const Padding(
                         padding: EdgeInsets.all(10.0),
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: fotoList,
                       ),
                     ]))))));
   }

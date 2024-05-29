@@ -55,7 +55,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
               ),
             ),
             Tab(
-              icon: Icon(Icons.gif_box_rounded),
+              icon: Icon(Icons.build_circle),
               child: Text(
                 "Projek",
                 style: TextStyle(fontSize: 11),

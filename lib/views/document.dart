@@ -161,23 +161,12 @@ class ItemDocument extends StatelessWidget {
                 Text(
                   judul,
                   style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Card(
-                    color: Colors.blueAccent,
-                    shadowColor: Colors.transparent,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 5, top: 1, right: 5, bottom: 1),
-                      child: Text(
-                        pembuat,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ))
+                )
               ],
             ),
             subtitle: Text('Dibuat tgl. : $createdAt'),
             leading: const Icon(
-              Icons.book,
+              Icons.document_scanner_outlined,
               size: 40,
               color: Colors.blueGrey,
             ),
