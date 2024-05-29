@@ -17,13 +17,15 @@ class RegularHeaderState extends State<RegularHeader> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      height: 60,
       color: Colors.white,
       alignment: Alignment.bottomCenter,
       width: double.infinity,
-      child: Text(
-        widget.title,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+      child: Center(
+        child: Text(
+          widget.title,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+        ),
       ),
     );
   }
