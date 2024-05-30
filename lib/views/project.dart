@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:foto_app/models/project_model.dart';
 import 'package:foto_app/views/detailproject.dart';
 import 'package:foto_app/widgets/regular_header.dart';
-import 'package:foto_app/views/detaildocument.dart';
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
