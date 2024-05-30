@@ -38,10 +38,7 @@ class AccountState extends State<Account> {
   void handleLogOut() async {
     handle_request.postData(Uri.parse('${host.BASE_URL}user/logout'), {}).then(
         (response) async {
-      print("ress status code: ${response.statusCode.toString()}");
       if (response.statusCode == 200) {
-        print(
-            "ress success: ${jsonDecode(response.body)['success'].toString()}");
         if (jsonDecode(response.body)['success'] == true) {
           await handle_storage.deleteAllStorage();
           // ignore: use_build_context_synchronously

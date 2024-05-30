@@ -44,7 +44,7 @@ class DocumentState extends State<Document> {
 
     setState(() {
       data = dataTrans;
-      isUserLogin = token != '';
+      isUserLogin = token != '' && token != "null";
     });
   }
 

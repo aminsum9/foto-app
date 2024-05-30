@@ -44,7 +44,7 @@ class ProjectState extends State<Project> {
 
     setState(() {
       data = dataTrans;
-      isUserLogin = token != '';
+      isUserLogin = token != '' && token != "null";
     });
   }
 

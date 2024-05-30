@@ -16,10 +16,10 @@ import 'package:dropdown_search/dropdown_search.dart';
 class AddDocument extends StatefulWidget {
   const AddDocument({super.key});
   @override
-  AddWarehouseState createState() => AddWarehouseState();
+  AddDocumentState createState() => AddDocumentState();
 }
 
-class AddWarehouseState extends State<AddDocument> {
+class AddDocumentState extends State<AddDocument> {
   TextEditingController controllerPembuat = TextEditingController(text: "");
   TextEditingController controllerJudul = TextEditingController(text: "");
   TextEditingController controllerLink = TextEditingController(text: "");
