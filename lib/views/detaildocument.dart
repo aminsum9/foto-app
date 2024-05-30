@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
+import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 
 // ignore: must_be_immutable
 class DetailDocument extends StatefulWidget {
@@ -18,6 +19,7 @@ class DetailDocument extends StatefulWidget {
 class DetailDocumentState extends State<DetailDocument> {
   DocumentModel? documentData;
   List<Widget> fotoList = [];
+  bool? isUserLogin;
 
   void confirmDelete() {
     showDialog<void>(
@@ -48,6 +50,16 @@ class DetailDocumentState extends State<DetailDocument> {
   @override
   void initState() {
     super.initState();
+
+    getStorageToken();
+  }
+
+  void getStorageToken() async {
+    String token = await handle_storage.getDataStorage('token');
+
+    setState(() {
+      isUserLogin = token != '' && token != "null";
+    });
   }
 
   Future<String> getDataStorage(String key) async {
@@ -105,12 +117,12 @@ class DetailDocumentState extends State<DetailDocument> {
                       Padding(
                         padding: const EdgeInsets.only(left: 30),
                         child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 children: [
                                   const Text(
-                                    "Ketegori         : ",
+                                    "Ketegori     : ",
                                     style: TextStyle(
                                         fontSize: 17.0,
                                         fontWeight: FontWeight.bold),
@@ -124,7 +136,7 @@ class DetailDocumentState extends State<DetailDocument> {
                               Row(
                                 children: [
                                   const Text(
-                                    "Link     : ",
+                                    "Link            : ",
                                     style: TextStyle(
                                         fontSize: 17.0,
                                         fontWeight: FontWeight.bold),
@@ -152,7 +164,21 @@ class DetailDocumentState extends State<DetailDocument> {
                               Row(
                                 children: [
                                   const Text(
-                                    "Dibuat oleh :",
+                                    "Ringkasan    : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    widget.document.ringkasan as String,
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Dibuat oleh   :",
                                     style: TextStyle(
                                         fontSize: 17.0,
                                         fontWeight: FontWeight.bold),
@@ -163,30 +189,164 @@ class DetailDocumentState extends State<DetailDocument> {
                                   ),
                                 ],
                               ),
-                              Row(
-                                children: [
-                                  const Text(
-                                    "Ringkasan      : ",
-                                    style: TextStyle(
-                                        fontSize: 17.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    widget.document.ringkasan as String,
-                                    style: const TextStyle(fontSize: 17.0),
-                                  ),
-                                ],
-                              )
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 20)),
+                              Visibility(
+                                  visible: widget.document.foto != null &&
+                                      widget.document.foto != '',
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('Foto:'),
+                                      const Padding(
+                                          padding: EdgeInsets.only(bottom: 5)),
+                                      Image.network(
+                                        '${host.BASE_URL_IMG}foto/${widget.document.foto}',
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ],
+                                  )),
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 20)),
+                              Visibility(
+                                  visible: widget.document.foto1 != null &&
+                                      widget.document.foto1 != '',
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('Foto 1:'),
+                                      const Padding(
+                                          padding: EdgeInsets.only(bottom: 5)),
+                                      Image.network(
+                                        '${host.BASE_URL_IMG}foto/${widget.document.foto1}',
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ],
+                                  )),
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 20)),
+                              Visibility(
+                                  visible: widget.document.foto2 != null &&
+                                      widget.document.foto2 != '',
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('Foto 2:'),
+                                      const Padding(
+                                          padding: EdgeInsets.only(bottom: 5)),
+                                      Image.network(
+                                        '${host.BASE_URL_IMG}foto/${widget.document.foto2}',
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ],
+                                  )),
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 20)),
+                              Visibility(
+                                  visible: widget.document.foto3 != null &&
+                                      widget.document.foto3 != '',
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('Foto 3:'),
+                                      const Padding(
+                                          padding: EdgeInsets.only(bottom: 5)),
+                                      Image.network(
+                                        '${host.BASE_URL_IMG}foto/${widget.document.foto3}',
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ],
+                                  )),
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 20)),
+                              Visibility(
+                                  visible: widget.document.foto4 != null &&
+                                      widget.document.foto4 != '',
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('Foto 4:'),
+                                      const Padding(
+                                          padding: EdgeInsets.only(bottom: 5)),
+                                      Image.network(
+                                        '${host.BASE_URL_IMG}foto/${widget.document.foto4}',
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ],
+                                  )),
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 20)),
+                              Visibility(
+                                  visible: widget.document.foto5 != null &&
+                                      widget.document.foto5 != '',
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('Foto 5:'),
+                                      const Padding(
+                                          padding: EdgeInsets.only(bottom: 5)),
+                                      Image.network(
+                                        '${host.BASE_URL_IMG}foto/${widget.document.foto5}',
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ],
+                                  )),
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 20)),
+                              Visibility(
+                                  visible: widget.document.foto6 != null &&
+                                      widget.document.foto6 != '',
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('Foto 6:'),
+                                      const Padding(
+                                          padding: EdgeInsets.only(bottom: 5)),
+                                      Image.network(
+                                        '${host.BASE_URL_IMG}foto/${widget.document.foto6}',
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ],
+                                  )),
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 20)),
                             ]),
                       ),
                       const Padding(
                         padding: EdgeInsets.all(20.0),
                       ),
-                      TextButton(
-                        onPressed: () => confirmDelete(),
-                        child: const Text("HAPUS",
-                            style: TextStyle(color: Colors.red)),
-                      ),
+                      Visibility(
+                          visible: isUserLogin == true,
+                          child: Row(
+                            children: [
+                              TextButton(
+                                onPressed: () => confirmDelete(),
+                                child: const Text("HAPUS",
+                                    style: TextStyle(color: Colors.red)),
+                              ),
+                            ],
+                          )),
                       const Padding(
                         padding: EdgeInsets.all(10.0),
                       ),

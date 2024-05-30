@@ -3,6 +3,7 @@ import 'package:foto_app/models/project_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
+import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 
 // ignore: must_be_immutable
 class DetailProject extends StatefulWidget {
@@ -17,6 +18,7 @@ class DetailProject extends StatefulWidget {
 
 class DetailProjectState extends State<DetailProject> {
   ProjectModel? projectData;
+  bool? isUserLogin;
 
   void confirmDelete() {
     showDialog<void>(
@@ -47,6 +49,16 @@ class DetailProjectState extends State<DetailProject> {
   @override
   void initState() {
     super.initState();
+
+    getStorageToken();
+  }
+
+  void getStorageToken() async {
+    String token = await handle_storage.getDataStorage('token');
+
+    setState(() {
+      isUserLogin = token != '' && token != "null";
+    });
   }
 
   Future<String> getDataStorage(String key) async {
@@ -91,12 +103,14 @@ class DetailProjectState extends State<DetailProject> {
                       const Padding(
                         padding: EdgeInsets.all(15.0),
                       ),
-                      Text(
-                        widget.project.nama as String,
-                        style: const TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
+                      Center(
+                        child: Text(
+                          widget.project.nama as String,
+                          style: const TextStyle(
+                              fontSize: 20.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                       const Padding(
                         padding: EdgeInsets.all(15.0),
@@ -105,7 +119,20 @@ class DetailProjectState extends State<DetailProject> {
                         padding: const EdgeInsets.only(left: 30),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              Visibility(
+                                visible: widget.project.gambar != null &&
+                                    widget.project.gambar != '',
+                                child: Image.network(
+                                  '${host.BASE_URL_IMG}project/${widget.project.gambar}',
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 20)),
                               Row(
                                 children: [
                                   const Text(
@@ -153,11 +180,15 @@ class DetailProjectState extends State<DetailProject> {
                       const Padding(
                         padding: EdgeInsets.all(20.0),
                       ),
-                      TextButton(
-                        onPressed: () => confirmDelete(),
-                        child: const Text("HAPUS",
-                            style: TextStyle(color: Colors.red)),
-                      ),
+                      Visibility(
+                          visible: isUserLogin == true,
+                          child: Row(children: [
+                            TextButton(
+                              onPressed: () => confirmDelete(),
+                              child: const Text("HAPUS",
+                                  style: TextStyle(color: Colors.red)),
+                            ),
+                          ])),
                       const Padding(
                         padding: EdgeInsets.all(10.0),
                       ),
