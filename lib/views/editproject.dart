@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:foto_app/models/project_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,16 +17,46 @@ class EditProject extends StatefulWidget {
   EditProjectState createState() => EditProjectState();
 }
 
+// class ScreenArguments {
+//   final ProjectModel project;
+
+//   ScreenArguments(this.project);
+// }
+
 class EditProjectState extends State<EditProject> {
   TextEditingController controllerNama = TextEditingController(text: "");
   TextEditingController controllerFotografer = TextEditingController(text: "");
   TextEditingController controllerVideografer = TextEditingController(text: "");
 
+  String projectId = "";
   String? selectedCategory;
-  //
   String? imageGambarName = "";
-
+  String? imageNetwork = "";
   File imageGambar = File("");
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+      getPrevPageData();
+    });
+  }
+
+  void getPrevPageData() {
+    dynamic argument = ModalRoute.of(context)!.settings.arguments;
+
+    ProjectModel project = argument['project'];
+
+    controllerNama.text = project.nama as String;
+    controllerFotografer.text = project.fotografer as String;
+    controllerVideografer.text = project.videografer as String;
+
+    setState(() {
+      projectId = project.id.toString();
+      imageNetwork = project.gambar as String;
+    });
+  }
 
   Future<File> _pickImageGambar() async {
     final picker = ImagePicker();
@@ -35,6 +66,7 @@ class EditProjectState extends State<EditProject> {
 
     setState(() {
       imageGambarName = imagePath;
+      imageNetwork = '';
       imageGambar = File(imagePath);
     });
     return File(imagePath);
@@ -45,10 +77,10 @@ class EditProjectState extends State<EditProject> {
     return prefs.getString(key).toString();
   }
 
-  void addDataProject(BuildContext context) async {
+  void updateDataProject(BuildContext context) async {
     var token = await getDataStorage('token');
 
-    var url = Uri.parse("${host.BASE_URL}project/add");
+    var url = Uri.parse("${host.BASE_URL}project/update");
 
     var dataImageGambar = imageGambar;
 
@@ -57,6 +89,7 @@ class EditProjectState extends State<EditProject> {
     request.headers["Authorization"] = 'Bearer $token';
     request.headers["Content-Type"] = 'multipart/form-data';
 
+    request.fields['id'] = projectId;
     request.fields['nama'] = controllerNama.text;
     request.fields['fotografer'] = controllerFotografer.text.toString();
     request.fields['videografer'] = controllerVideografer.text.toString();
@@ -81,7 +114,7 @@ class EditProjectState extends State<EditProject> {
           barrierDismissible: false,
           builder: (BuildContext contextt) {
             return AlertDialog(
-              title: const Text('Berhasil menambah projek baru.'),
+              title: const Text('Berhasil mengubah data.'),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.pushNamed(context, '/home'),
@@ -98,7 +131,7 @@ class EditProjectState extends State<EditProject> {
           barrierDismissible: false,
           builder: (BuildContext contextt) {
             return AlertDialog(
-              title: const Text('Gagal menambah projek'),
+              title: const Text('Gagal mengubah data!'),
               content: Text(decodedMap['message']),
               actions: <Widget>[
                 TextButton(
@@ -117,7 +150,7 @@ class EditProjectState extends State<EditProject> {
         barrierDismissible: false,
         builder: (BuildContext contextt) {
           return AlertDialog(
-            title: const Text('Gagal menambah projek!'),
+            title: const Text('Gagal mengubah data!'),
             content: const Text("Terjadi kesalahan pada server."),
             actions: <Widget>[
               TextButton(
@@ -135,8 +168,7 @@ class EditProjectState extends State<EditProject> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            const Text("Tambah Projek", style: TextStyle(color: Colors.black)),
+        title: const Text("Edit Projek", style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         shadowColor: Colors.transparent,
         leading: IconButton(
@@ -188,6 +220,9 @@ class EditProjectState extends State<EditProject> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    // Visibility(
+                    //     visible: imageNetwork != "",
+                    //     child: ),
                     imageGambarName != ""
                         ? (SizedBox(
                             width: 100,
@@ -198,16 +233,26 @@ class EditProjectState extends State<EditProject> {
                               imageGambar,
                               fit: BoxFit.fill,
                             ))))
-                        : (const ClipRRect(
-                            // borderRadius: BorderRadius.circular(100.0),
-                            child: SizedBox(
-                              width: 100.0,
-                              height: 100.0,
-                              child: Icon(Icons.widgets,
-                                  color: Colors.blueGrey, size: 100.0),
-                            ),
-                          )),
-                    imageGambarName == ""
+                        : imageNetwork != ""
+                            ? SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: ClipRRect(
+                                    // borderRadius: BorderRadius.circular(100.0),
+                                    child: Image.network(
+                                  '${host.BASE_URL_IMG}project/$imageNetwork',
+                                  fit: BoxFit.fill,
+                                )))
+                            : (const ClipRRect(
+                                // borderRadius: BorderRadius.circular(100.0),
+                                child: SizedBox(
+                                  width: 100.0,
+                                  height: 100.0,
+                                  child: Icon(Icons.widgets,
+                                      color: Colors.blueGrey, size: 100.0),
+                                ),
+                              )),
+                    imageGambarName == "" && imageNetwork == ""
                         ? (TextButton(
                             onPressed: () async {
                               _pickImageGambar();
@@ -217,6 +262,7 @@ class EditProjectState extends State<EditProject> {
                             onPressed: () async {
                               setState(() {
                                 imageGambarName = "";
+                                imageNetwork = "";
                                 imageGambar = File("");
                               });
                             },
@@ -233,7 +279,7 @@ class EditProjectState extends State<EditProject> {
         margin: const EdgeInsets.only(left: 16, right: 16, bottom: 10),
         child: TextButton(
           onPressed: () {
-            addDataProject(context);
+            updateDataProject(context);
           },
           style: TextButton.styleFrom(
               shape: RoundedRectangleBorder(
@@ -241,8 +287,8 @@ class EditProjectState extends State<EditProject> {
               ),
               backgroundColor: colors.primary,
               padding: const EdgeInsets.all(15)),
-          child: const Text("TAMBAH Projek",
-              style: TextStyle(color: Colors.white)),
+          child:
+              const Text("Edit Projek", style: TextStyle(color: Colors.white)),
         ),
       ),
     );

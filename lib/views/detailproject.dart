@@ -188,6 +188,13 @@ class DetailProjectState extends State<DetailProject> {
                               child: const Text("HAPUS",
                                   style: TextStyle(color: Colors.red)),
                             ),
+                            TextButton(
+                              onPressed: () => Navigator.pushNamed(
+                                  context, '/edit_project',
+                                  arguments: {"project": widget.project}),
+                              child: const Text("EDIT",
+                                  style: TextStyle(color: Colors.green)),
+                            ),
                           ])),
                       const Padding(
                         padding: EdgeInsets.all(10.0),
