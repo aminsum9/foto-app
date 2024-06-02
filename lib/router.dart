@@ -3,6 +3,7 @@ import 'package:foto_app/views/addproject.dart';
 import 'package:foto_app/views/dashboard.dart';
 import 'package:foto_app/views/document.dart';
 import 'package:foto_app/views/adddocument.dart';
+import 'package:foto_app/views/editdocument.dart';
 import 'package:foto_app/views/editproject.dart';
 import 'package:foto_app/views/home.dart';
 import 'package:foto_app/views/login.dart';
@@ -72,6 +73,7 @@ class RouterState extends State<RouterApp> with TickerProviderStateMixin {
               '/project': (context) => const Project(),
               '/add_project': (context) => const AddProject(),
               '/edit_project': (context) => const EditProject(),
+              '/edit_document': (context) => const EditDocument(),
               '/account': (context) => const Account(),
             }));
   }

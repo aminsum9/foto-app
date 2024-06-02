@@ -102,7 +102,7 @@ class ProjectState extends State<Project> {
                       height: MediaQuery.of(context).size.height - 200,
                       child: RefreshIndicator(
                         onRefresh: () => _handleRefresh(),
-                        child: ListView.separated(
+                        child: ListView.builder(
                           padding: const EdgeInsets.all(8),
                           itemCount: data.length,
                           itemBuilder: (context, index) {
@@ -113,8 +113,6 @@ class ProjectState extends State<Project> {
                                 createdAt: data[index].createdAt as String,
                                 index: index);
                           },
-                          separatorBuilder: (BuildContext context, int index) =>
-                              const Divider(),
                         ),
                       ),
                     )

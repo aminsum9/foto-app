@@ -345,6 +345,13 @@ class DetailDocumentState extends State<DetailDocument> {
                                 child: const Text("HAPUS",
                                     style: TextStyle(color: Colors.red)),
                               ),
+                              TextButton(
+                                onPressed: () => Navigator.pushNamed(
+                                    context, '/edit_document',
+                                    arguments: {'document': widget.document}),
+                                child: const Text("EDIT",
+                                    style: TextStyle(color: Colors.green)),
+                              ),
                             ],
                           )),
                       const Padding(
