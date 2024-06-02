@@ -70,10 +70,10 @@ class RouterState extends State<RouterApp> with TickerProviderStateMixin {
               '/dashboard': (context) => const Dashboard(),
               '/document': (context) => const Document(),
               '/add_document': (context) => const AddDocument(),
+              '/edit_document': (context) => const EditDocument(),
               '/project': (context) => const Project(),
               '/add_project': (context) => const AddProject(),
               '/edit_project': (context) => const EditProject(),
-              '/edit_document': (context) => const EditDocument(),
               '/account': (context) => const Account(),
             }));
   }
