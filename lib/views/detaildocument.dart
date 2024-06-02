@@ -128,7 +128,8 @@ class DetailDocumentState extends State<DetailDocument> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    "${widget.document.kategori}",
+                                    widget.document.kategoriData?.kategori ??
+                                        "",
                                     style: const TextStyle(fontSize: 17.0),
                                   ),
                                 ],

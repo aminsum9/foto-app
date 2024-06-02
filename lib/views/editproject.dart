@@ -112,12 +112,12 @@ class EditProjectState extends State<EditProject> {
         showDialog<void>(
           context: context,
           barrierDismissible: false,
-          builder: (BuildContext contextt) {
+          builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Berhasil mengubah data.'),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () => Navigator.pushNamed(context, '/home'),
+                  onPressed: () => Navigator.of(context).pop(),
                   child:
                       const Text("OK", style: TextStyle(color: Colors.green)),
                 ),
@@ -129,7 +129,7 @@ class EditProjectState extends State<EditProject> {
         showDialog<void>(
           context: context,
           barrierDismissible: false,
-          builder: (BuildContext contextt) {
+          builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Gagal mengubah data!'),
               content: Text(decodedMap['message']),
@@ -148,13 +148,13 @@ class EditProjectState extends State<EditProject> {
       showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext contextt) {
+        builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Gagal mengubah data!'),
             content: const Text("Terjadi kesalahan pada server."),
             actions: <Widget>[
               TextButton(
-                onPressed: () => Navigator.pop(contextt),
+                onPressed: () => Navigator.pop(context),
                 child: const Text("OK", style: TextStyle(color: Colors.green)),
               ),
             ],

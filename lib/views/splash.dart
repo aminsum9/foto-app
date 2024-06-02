@@ -37,6 +37,9 @@ class SplashState extends State<Splash> with TickerProviderStateMixin {
             // ignore: use_build_context_synchronously
             Navigator.pushNamed(context, '/home');
           } else {
+            await handle_storage.saveDataStorage('token', '');
+            await handle_storage.saveDataStorage('user', '');
+            // ignore: use_build_context_synchronously
             Navigator.pushNamed(context, '/home');
           }
         } else {

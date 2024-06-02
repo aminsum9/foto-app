@@ -1,3 +1,5 @@
+import 'package:foto_app/models/category_model.dart';
+
 class DocumentModel {
   final int? id;
   final String? pembuat;
@@ -13,6 +15,7 @@ class DocumentModel {
   final String? foto5;
   final String? foto6;
   final String? link;
+  final CategoryModel? kategoriData;
   final String? createdAt;
   final String? updatedAt;
 
@@ -31,6 +34,7 @@ class DocumentModel {
       this.foto5,
       this.foto6,
       this.link,
+      this.kategoriData,
       this.createdAt,
       this.updatedAt});
 
@@ -50,6 +54,7 @@ class DocumentModel {
       foto5: json['foto5'] as String?,
       foto6: json['foto6'] as String?,
       link: json['link'] as String?,
+      kategoriData: CategoryModel.fromJson(json['kategori_data']),
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
     );

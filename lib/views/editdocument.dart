@@ -79,11 +79,10 @@ class EditDocumentState extends State<EditDocument> {
 
     DateTime documentDateData = DateTime.parse(document.tanggal.toString());
 
-    setSelectedKategori(document.kategori.toString());
-
     setState(() {
       documentId = document.id.toString();
       selectedCategoryId = document.kategori.toString();
+      selectedCategory = document.kategoriData?.kategori ?? "";
       documentDateData = documentDateData;
       imageNetworkFoto = document.foto as String;
       imageNetworkFoto1 = document.foto1 as String;
@@ -93,53 +92,6 @@ class EditDocumentState extends State<EditDocument> {
       imageNetworkFoto5 = document.foto5 as String;
       imageNetworkFoto6 = document.foto6 as String;
     });
-  }
-
-  void setSelectedKategori(id) async {
-    var body = {};
-
-    final response = await handle_request.postData(
-        Uri.parse("${host.BASE_URL}category"), body);
-
-    if (response.statusCode != 200) {
-      return null;
-    }
-
-    var data = await jsonDecode(response.body);
-
-    List<CategoryModel> ressData = [];
-
-    if (data['success'] == true) {
-      for (var i = 0; i < data['data'].length; i++) {
-        dynamic itemCategory = data['data'][i];
-
-        ressData.add(CategoryModel.fromJson(itemCategory));
-      }
-
-      setState(() {
-        listCategories = ressData;
-      });
-
-      List<String> listCategoriesString = [];
-
-      for (var i = 0; i < ressData.length; i++) {
-        CategoryModel itemCategory = ressData[i];
-
-        listCategoriesString.add(itemCategory.kategori as String);
-      }
-
-      String selectedCategoryName = "";
-
-      for (var e in listCategories) {
-        if (e.id.toString() == id.toString()) {
-          selectedCategoryName = e.kategori.toString();
-        }
-      }
-
-      setState(() {
-        selectedCategory = selectedCategoryName;
-      });
-    }
   }
 
   Future<File> _pickImageFoto() async {
@@ -327,12 +279,12 @@ class EditDocumentState extends State<EditDocument> {
         showDialog<void>(
           context: context,
           barrierDismissible: false,
-          builder: (BuildContext contextt) {
+          builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Berhasil menambah dokumen baru.'),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () => Navigator.pushNamed(context, '/home'),
+                  onPressed: () => Navigator.of(context).pop(),
                   child:
                       const Text("OK", style: TextStyle(color: Colors.green)),
                 ),
@@ -344,7 +296,7 @@ class EditDocumentState extends State<EditDocument> {
         showDialog<void>(
           context: context,
           barrierDismissible: false,
-          builder: (BuildContext contextt) {
+          builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Gagal menambah dokumen'),
               content: Text(decodedMap['message']),

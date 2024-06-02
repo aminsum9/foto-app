@@ -229,12 +229,12 @@ class AddDocumentState extends State<AddDocument> {
         showDialog<void>(
           context: context,
           barrierDismissible: false,
-          builder: (BuildContext contextt) {
+          builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Berhasil menambah dokumen baru.'),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () => Navigator.pushNamed(context, '/home'),
+                  onPressed: () => Navigator.of(context).pop(),
                   child:
                       const Text("OK", style: TextStyle(color: Colors.green)),
                 ),
@@ -246,7 +246,7 @@ class AddDocumentState extends State<AddDocument> {
         showDialog<void>(
           context: context,
           barrierDismissible: false,
-          builder: (BuildContext contextt) {
+          builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Gagal menambah dokumen'),
               content: Text(decodedMap['message']),
@@ -265,7 +265,7 @@ class AddDocumentState extends State<AddDocument> {
       showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext contextt) {
+        builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Gagal menambah dokumen!'),
             content: const Text("Terjadi kesalahan pada server."),
