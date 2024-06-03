@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foto_app/widgets/button_regular.dart';
 import 'package:foto_app/widgets/regular_header.dart';
 import 'package:flutter/material.dart';
@@ -37,10 +38,24 @@ class LoginState extends State<Login> {
           // ignore: use_build_context_synchronously
           Navigator.pushNamed(context, '/home');
         } else {
-          //
+          Fluttertoast.showToast(
+              msg: "${jsonDecode(response.body)['message']}",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       } else {
-        //
+        Fluttertoast.showToast(
+            msg: "Gagal melakukan login!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
     });
   }
@@ -50,7 +65,8 @@ class LoginState extends State<Login> {
     double height = MediaQuery.sizeOf(context).height;
 
     return Scaffold(
-        body: Column(
+        body: SafeArea(
+            child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             RegularHeader(title: "Masuk"),
@@ -86,7 +102,7 @@ class LoginState extends State<Login> {
               ),
             ),
           ],
-        ),
+        )),
         bottomNavigationBar: BottomContainer(
           handleLogin: () => handleLogin(),
         ));

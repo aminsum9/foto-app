@@ -205,7 +205,7 @@ class EditDocumentState extends State<EditDocument> {
     var dataImageFoto5 = imageFoto5;
     var dataImageFoto6 = imageFoto6;
 
-    String idCategory = "0";
+    String idCategory = selectedCategoryId.toString();
 
     for (var e in listCategories) {
       if (e.kategori == selectedCategory) {
@@ -278,7 +278,7 @@ class EditDocumentState extends State<EditDocument> {
 
       if (decodedMap['success']) {
         Fluttertoast.showToast(
-            msg: "Berhasil menambah mengubah",
+            msg: "Berhasil mengubah mengubah",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.TOP,
             timeInSecForIosWeb: 1,

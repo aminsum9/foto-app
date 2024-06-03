@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foto_app/models/project_model.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
@@ -37,6 +38,7 @@ class DetailProjectState extends State<DetailProject> {
             TextButton(
               child: const Text('HAPUS', style: TextStyle(color: Colors.red)),
               onPressed: () {
+                Navigator.pop(context, true);
                 deleteData(widget.project);
               },
             ),
@@ -67,7 +69,7 @@ class DetailProjectState extends State<DetailProject> {
   }
 
   void deleteData(ProjectModel project) async {
-    dynamic body = {"id": project.id};
+    dynamic body = {"id": project.id.toString()};
 
     var url = "${host.BASE_URL}project/delete";
 
@@ -78,6 +80,14 @@ class DetailProjectState extends State<DetailProject> {
 
   @override
   Widget build(BuildContext context) {
+    String createDate = widget.project.createdAt as String;
+
+    var now = DateTime.now().toString();
+    var date = createDate != ''
+        ? DateTime.parse(createDate.split('T')[0])
+        : DateTime.parse(now.split('T')[0]);
+    String createdAt = DateFormat('dd MMMM yyy').format(date);
+
     return Scaffold(
         appBar: AppBar(
             title: Text(
@@ -172,6 +182,20 @@ class DetailProjectState extends State<DetailProject> {
                                   ),
                                   Text(
                                     widget.project.videografer as String,
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Dibuat Tgl.    : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    createdAt,
                                     style: const TextStyle(fontSize: 17.0),
                                   ),
                                 ],

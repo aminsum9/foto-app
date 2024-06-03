@@ -1,5 +1,6 @@
 import 'package:foto_app/models/document_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
@@ -38,7 +39,8 @@ class DetailDocumentState extends State<DetailDocument> {
             TextButton(
               child: const Text('HAPUS', style: TextStyle(color: Colors.red)),
               onPressed: () {
-                deleteData();
+                Navigator.pop(context, true);
+                deleteData(widget.document.id);
               },
             ),
           ],
@@ -67,8 +69,8 @@ class DetailDocumentState extends State<DetailDocument> {
     return prefs.getString(key).toString();
   }
 
-  void deleteData() async {
-    dynamic body = {"page": 1, "paging": 10};
+  void deleteData(id) async {
+    dynamic body = {"id": id.toString()};
 
     var url = "${host.BASE_URL}document/delete";
 
@@ -79,6 +81,14 @@ class DetailDocumentState extends State<DetailDocument> {
 
   @override
   Widget build(BuildContext context) {
+    String createDate = widget.document.createdAt as String;
+
+    var now = DateTime.now().toString();
+    var date = createDate != ''
+        ? DateTime.parse(createDate.split('T')[0])
+        : DateTime.parse(now.split('T')[0]);
+    String createdAt = DateFormat('dd MMMM yyy').format(date);
+
     return Scaffold(
         appBar: AppBar(
             title: Text(
@@ -152,20 +162,6 @@ class DetailDocumentState extends State<DetailDocument> {
                               Row(
                                 children: [
                                   const Text(
-                                    "Foto           : ",
-                                    style: TextStyle(
-                                        fontSize: 17.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    widget.document.foto as String,
-                                    style: const TextStyle(fontSize: 17.0),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  const Text(
                                     "Ringkasan    : ",
                                     style: TextStyle(
                                         fontSize: 17.0,
@@ -180,13 +176,41 @@ class DetailDocumentState extends State<DetailDocument> {
                               Row(
                                 children: [
                                   const Text(
-                                    "Dibuat oleh   :",
+                                    "Dibuat oleh   : ",
                                     style: TextStyle(
                                         fontSize: 17.0,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
                                     "${widget.document.pembuat}",
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Tanggal      : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    widget.document.tanggal as String,
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Dibuat Tgl. : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    createdAt,
                                     style: const TextStyle(fontSize: 17.0),
                                   ),
                                 ],

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foto_app/widgets/button_regular.dart';
 import 'package:foto_app/widgets/regular_header.dart';
 import 'package:flutter/material.dart';
@@ -52,10 +53,24 @@ class RegisterState extends State<Register> {
           // ignore: use_build_context_synchronously
           Navigator.pushNamed(context, '/home');
         } else {
-          //
+          Fluttertoast.showToast(
+              msg: "${jsonDecode(response.body)['message']}",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       } else {
-        //
+        Fluttertoast.showToast(
+            msg: "Gagal melakukan registrasi!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
     });
   }
@@ -82,47 +97,53 @@ class RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
     return Scaffold(
-        body: KeyboardListener(
-            focusNode: _focusNode,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                RegularHeader(title: "Daftar"),
-                Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: SizedBox(
-                      height: isKeyboardFocus == "true"
-                          ? (height / 2)
-                          : (height - 210),
-                      child: ListView(
-                        children: [
-                          Image.asset(
-                            "assets/images/logo/humas.png",
-                            width: 180,
-                            height: 180,
+        body: SafeArea(
+            child: KeyboardListener(
+                focusNode: _focusNode,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    RegularHeader(title: "Daftar"),
+                    Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: SizedBox(
+                          height: isKeyboardFocus == "true"
+                              ? (height / 2)
+                              : (height - 220),
+                          child: ListView(
+                            children: [
+                              Image.asset(
+                                "assets/images/logo/humas.png",
+                                width: 180,
+                                height: 180,
+                              ),
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 100)),
+                              const Text("Satuan Kerja:"),
+                              TextField(
+                                  controller: satuanKerja,
+                                  inputFormatters: [
+                                    UpperCaseTextFormatter(),
+                                  ]),
+                              const Text("Nama:"),
+                              TextField(controller: name),
+                              const Text('Email:'),
+                              TextField(
+                                controller: email,
+                              ),
+                              const Text('Password:'),
+                              TextField(
+                                  controller: password, obscureText: true),
+                              const Text('Konfirmasi Password:'),
+                              TextField(
+                                  controller: passwordConf, obscureText: true),
+                              const Padding(
+                                  padding: EdgeInsets.only(bottom: 100)),
+                            ],
                           ),
-                          const Padding(padding: EdgeInsets.only(bottom: 100)),
-                          const Text("Satuan Kerja:"),
-                          TextField(controller: satuanKerja, inputFormatters: [
-                            UpperCaseTextFormatter(),
-                          ]),
-                          const Text("Nama:"),
-                          TextField(controller: name),
-                          const Text('Email:'),
-                          TextField(
-                            controller: email,
-                          ),
-                          const Text('Password:'),
-                          TextField(controller: password, obscureText: true),
-                          const Text('Konfirmasi Password:'),
-                          TextField(
-                              controller: passwordConf, obscureText: true),
-                          const Padding(padding: EdgeInsets.only(bottom: 100)),
-                        ],
-                      ),
-                    ))
-              ],
-            )),
+                        ))
+                  ],
+                ))),
         bottomNavigationBar: BottomContainer(
           handleRegister: () => handleRegister(),
         ));
@@ -143,7 +164,6 @@ class BottomContainerState extends State<BottomContainer> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
-    double width = MediaQuery.sizeOf(context).width;
 
     return Container(
       alignment: Alignment.center,
