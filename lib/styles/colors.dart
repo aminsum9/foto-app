@@ -2,4 +2,4 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-Color primary = const Color.fromRGBO(22, 247, 112, 1);
+Color primary = const Color.fromRGBO(242, 180, 7, 1);
