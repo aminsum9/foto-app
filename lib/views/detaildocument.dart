@@ -72,8 +72,9 @@ class DetailDocumentState extends State<DetailDocument> {
 
     var url = "${host.BASE_URL}document/delete";
 
-    handle_request.postData(Uri.parse(url), body).then((response) =>
-        {Navigator.pop(context, true), Navigator.pop(context, true)});
+    handle_request.postData(Uri.parse(url), body).then((response) {
+      Navigator.pop(context, true);
+    });
   }
 
   @override

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foto_app/models/project_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -109,58 +110,35 @@ class EditProjectState extends State<EditProject> {
       final decodedMap = await json.decode(respBody);
 
       if (decodedMap['success']) {
-        showDialog<void>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Berhasil mengubah data.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child:
-                      const Text("OK", style: TextStyle(color: Colors.green)),
-                ),
-              ],
-            );
-          },
-        );
+        Fluttertoast.showToast(
+            msg: "Berhasil mengubah data.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
       } else if (decodedMap['message'] != null) {
-        showDialog<void>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Gagal mengubah data!'),
-              content: Text(decodedMap['message']),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child:
-                      const Text("OK", style: TextStyle(color: Colors.green)),
-                )
-              ],
-            );
-          },
-        );
+        Fluttertoast.showToast(
+            msg: "Gagal mengubah data!, ${decodedMap['message']}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
     } else {
-      showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Gagal mengubah data!'),
-            content: const Text("Terjadi kesalahan pada server."),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("OK", style: TextStyle(color: Colors.green)),
-              ),
-            ],
-          );
-        },
-      );
+      Fluttertoast.showToast(
+          msg: "Gagal mengubah data!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 

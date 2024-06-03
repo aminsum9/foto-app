@@ -12,6 +12,7 @@ import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/styles/colors.dart' as colors;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AddDocument extends StatefulWidget {
   const AddDocument({super.key});
@@ -226,58 +227,34 @@ class AddDocumentState extends State<AddDocument> {
       final decodedMap = await json.decode(respBody);
 
       if (decodedMap['success']) {
-        showDialog<void>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Berhasil menambah dokumen baru.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child:
-                      const Text("OK", style: TextStyle(color: Colors.green)),
-                ),
-              ],
-            );
-          },
-        );
+        Fluttertoast.showToast(
+            msg: "Berhasil menambah dokumen baru.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        Navigator.of(context).pop();
       } else if (decodedMap['message'] != null) {
-        showDialog<void>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Gagal menambah dokumen'),
-              content: Text(decodedMap['message']),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child:
-                      const Text("OK", style: TextStyle(color: Colors.green)),
-                )
-              ],
-            );
-          },
-        );
+        Fluttertoast.showToast(
+            msg: "Gagal menambah dokumen!, ${decodedMap['message']}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
     } else {
-      showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Gagal menambah dokumen!'),
-            content: const Text("Terjadi kesalahan pada server."),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("OK", style: TextStyle(color: Colors.green)),
-              ),
-            ],
-          );
-        },
-      );
+      Fluttertoast.showToast(
+          msg: "Gagal menambah dokumen!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 

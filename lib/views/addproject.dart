@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
@@ -76,58 +77,34 @@ class AddProjectState extends State<AddProject> {
       final decodedMap = await json.decode(respBody);
 
       if (decodedMap['success']) {
-        showDialog<void>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Berhasil menambah projek baru.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child:
-                      const Text("OK", style: TextStyle(color: Colors.green)),
-                ),
-              ],
-            );
-          },
-        );
+        Fluttertoast.showToast(
+            msg: "Berhasil menambah projek baru.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        Navigator.of(context).pop();
       } else if (decodedMap['message'] != null) {
-        showDialog<void>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Gagal menambah projek'),
-              content: Text(decodedMap['message']),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child:
-                      const Text("OK", style: TextStyle(color: Colors.green)),
-                )
-              ],
-            );
-          },
-        );
+        Fluttertoast.showToast(
+            msg: "Gagal menambah projek!, ${decodedMap['message']}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
     } else {
-      showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Gagal menambah projek!'),
-            content: const Text("Terjadi kesalahan pada server."),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("OK", style: TextStyle(color: Colors.green)),
-              ),
-            ],
-          );
-        },
-      );
+      Fluttertoast.showToast(
+          msg: "Gagal menambah projek!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 

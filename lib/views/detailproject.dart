@@ -71,8 +71,9 @@ class DetailProjectState extends State<DetailProject> {
 
     var url = "${host.BASE_URL}project/delete";
 
-    handle_request.postData(Uri.parse(url), body).then((response) =>
-        {Navigator.pop(context, true), Navigator.pop(context, true)});
+    handle_request.postData(Uri.parse(url), body).then((response) {
+      Navigator.pop(context, true);
+    });
   }
 
   @override
