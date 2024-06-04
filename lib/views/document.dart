@@ -80,6 +80,10 @@ class DocumentState extends State<Document> {
 
       return ressData;
     } else {
+      setState(() {
+        loading = false;
+      });
+
       return ressData;
     }
   }
@@ -138,21 +142,26 @@ class DocumentState extends State<Document> {
                           return true;
                         },
                         child: !loading
-                            ? RefreshIndicator(
-                                onRefresh: () => _handleRefresh(),
-                                child: ListView.builder(
-                                  padding: const EdgeInsets.all(8),
-                                  itemCount: data.length,
-                                  itemBuilder: (context, index) {
-                                    return ItemDocument(
-                                        item: data[index],
-                                        pembuat: data[index].pembuat as String,
-                                        judul: data[index].judul as String,
-                                        docCreatedAt:
-                                            data[index].createdAt as String,
-                                        index: index);
-                                  },
-                                ))
+                            ? data.isEmpty
+                                ? const Center(
+                                    child: Text('Belum ada data Dokumen!'),
+                                  )
+                                : RefreshIndicator(
+                                    onRefresh: () => _handleRefresh(),
+                                    child: ListView.builder(
+                                      padding: const EdgeInsets.all(8),
+                                      itemCount: data.length,
+                                      itemBuilder: (context, index) {
+                                        return ItemDocument(
+                                            item: data[index],
+                                            pembuat:
+                                                data[index].pembuat as String,
+                                            judul: data[index].judul as String,
+                                            docCreatedAt:
+                                                data[index].createdAt as String,
+                                            index: index);
+                                      },
+                                    ))
                             : const Center(
                                 child: CircularProgressIndicator(),
                               ),

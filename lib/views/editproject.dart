@@ -218,7 +218,7 @@ class EditProjectState extends State<EditProject> {
                                 child: ClipRRect(
                                     // borderRadius: BorderRadius.circular(100.0),
                                     child: Image.network(
-                                  '${host.BASE_URL_IMG}project/$imageNetwork',
+                                  '${host.BASE_URL_IMG}paket-project/$imageNetwork',
                                   fit: BoxFit.fill,
                                 )))
                             : (const ClipRRect(

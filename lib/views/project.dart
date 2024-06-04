@@ -86,6 +86,9 @@ class ProjectState extends State<Project> {
 
       return ressData;
     } else {
+      setState(() {
+        loading = false;
+      });
       return ressData;
     }
   }
@@ -139,20 +142,24 @@ class ProjectState extends State<Project> {
                         child: RefreshIndicator(
                           onRefresh: () => _handleRefresh(),
                           child: !loading
-                              ? ListView.builder(
-                                  padding: const EdgeInsets.all(8),
-                                  itemCount: data.length,
-                                  itemBuilder: (context, index) {
-                                    return ItemProject(
-                                        item: data[index],
-                                        nama: data[index].nama as String,
-                                        fotografer:
-                                            data[index].fotografer as String,
-                                        createdAt:
-                                            data[index].createdAt as String,
-                                        index: index);
-                                  },
-                                )
+                              ? data.isEmpty
+                                  ? const Center(
+                                      child: Text('Belum ada data Projek!'),
+                                    )
+                                  : ListView.builder(
+                                      padding: const EdgeInsets.all(8),
+                                      itemCount: data.length,
+                                      itemBuilder: (context, index) {
+                                        return ItemProject(
+                                            item: data[index],
+                                            nama: data[index].nama as String,
+                                            fotografer: data[index].fotografer
+                                                as String,
+                                            createdAt:
+                                                data[index].createdAt as String,
+                                            index: index);
+                                      },
+                                    )
                               : const Center(
                                   child: CircularProgressIndicator(),
                                 ),

@@ -136,7 +136,7 @@ class DetailProjectState extends State<DetailProject> {
                                 visible: widget.project.gambar != null &&
                                     widget.project.gambar != '',
                                 child: Image.network(
-                                  '${host.BASE_URL_IMG}project/${widget.project.gambar}',
+                                  '${host.BASE_URL_IMG}paket-project/${widget.project.gambar}',
                                   height: 100,
                                   width: 100,
                                   fit: BoxFit.contain,

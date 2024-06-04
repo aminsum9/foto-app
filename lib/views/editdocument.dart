@@ -489,7 +489,7 @@ class EditDocumentState extends State<EditDocument> {
                                   width: 100.0,
                                   height: 100.0,
                                   child: Image.network(
-                                      '${host.BASE_URL_IMG}foto/$imageNetworkFoto'),
+                                      '${host.BASE_URL_IMG}document/$imageNetworkFoto'),
                                 ),
                               ))
                             : (const ClipRRect(
@@ -538,7 +538,7 @@ class EditDocumentState extends State<EditDocument> {
                                     width: 100.0,
                                     height: 100.0,
                                     child: Image.network(
-                                        '${host.BASE_URL_IMG}foto/$imageNetworkFoto1')),
+                                        '${host.BASE_URL_IMG}document/$imageNetworkFoto1')),
                               ))
                             : (const ClipRRect(
                                 // borderRadius: BorderRadius.circular(100.0),
@@ -586,7 +586,7 @@ class EditDocumentState extends State<EditDocument> {
                                     width: 100.0,
                                     height: 100.0,
                                     child: Image.network(
-                                        '${host.BASE_URL_IMG}foto/$imageNetworkFoto2'))))
+                                        '${host.BASE_URL_IMG}document/$imageNetworkFoto2'))))
                             : (const ClipRRect(
                                 // borderRadius: BorderRadius.circular(100.0),
                                 child: SizedBox(
@@ -633,7 +633,7 @@ class EditDocumentState extends State<EditDocument> {
                                   width: 100.0,
                                   height: 100.0,
                                   child: Image.network(
-                                      '${host.BASE_URL_IMG}foto/$imageNetworkFoto3'),
+                                      '${host.BASE_URL_IMG}document/$imageNetworkFoto3'),
                                 ),
                               ))
                             : (const ClipRRect(
@@ -682,7 +682,7 @@ class EditDocumentState extends State<EditDocument> {
                                 width: 100.0,
                                 height: 100.0,
                                 child: Image.network(
-                                    '${host.BASE_URL_IMG}foto/$imageNetworkFoto4'),
+                                    '${host.BASE_URL_IMG}document/$imageNetworkFoto4'),
                               )))
                             : (const ClipRRect(
                                 // borderRadius: BorderRadius.circular(100.0),
@@ -730,7 +730,7 @@ class EditDocumentState extends State<EditDocument> {
                                   width: 100.0,
                                   height: 100.0,
                                   child: Image.network(
-                                      '${host.BASE_URL_IMG}foto/$imageNetworkFoto5'),
+                                      '${host.BASE_URL_IMG}document/$imageNetworkFoto5'),
                                 ),
                               ))
                             : (const ClipRRect(
@@ -779,7 +779,7 @@ class EditDocumentState extends State<EditDocument> {
                                   width: 100.0,
                                   height: 100.0,
                                   child: Image.network(
-                                      '${host.BASE_URL_IMG}foto/$imageNetworkFoto6'),
+                                      '${host.BASE_URL_IMG}document/$imageNetworkFoto6'),
                                 ),
                               ))
                             : (const ClipRRect(

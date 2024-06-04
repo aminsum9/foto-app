@@ -228,7 +228,7 @@ class DetailDocumentState extends State<DetailDocument> {
                                       const Padding(
                                           padding: EdgeInsets.only(bottom: 5)),
                                       Image.network(
-                                        '${host.BASE_URL_IMG}foto/${widget.document.foto}',
+                                        '${host.BASE_URL_IMG}document/${widget.document.foto}',
                                         height: 100,
                                         width: 100,
                                         fit: BoxFit.contain,
@@ -248,7 +248,7 @@ class DetailDocumentState extends State<DetailDocument> {
                                       const Padding(
                                           padding: EdgeInsets.only(bottom: 5)),
                                       Image.network(
-                                        '${host.BASE_URL_IMG}foto/${widget.document.foto1}',
+                                        '${host.BASE_URL_IMG}document/${widget.document.foto1}',
                                         height: 100,
                                         width: 100,
                                         fit: BoxFit.contain,
@@ -268,7 +268,7 @@ class DetailDocumentState extends State<DetailDocument> {
                                       const Padding(
                                           padding: EdgeInsets.only(bottom: 5)),
                                       Image.network(
-                                        '${host.BASE_URL_IMG}foto/${widget.document.foto2}',
+                                        '${host.BASE_URL_IMG}document/${widget.document.foto2}',
                                         height: 100,
                                         width: 100,
                                         fit: BoxFit.contain,
@@ -288,7 +288,7 @@ class DetailDocumentState extends State<DetailDocument> {
                                       const Padding(
                                           padding: EdgeInsets.only(bottom: 5)),
                                       Image.network(
-                                        '${host.BASE_URL_IMG}foto/${widget.document.foto3}',
+                                        '${host.BASE_URL_IMG}document/${widget.document.foto3}',
                                         height: 100,
                                         width: 100,
                                         fit: BoxFit.contain,
@@ -308,7 +308,7 @@ class DetailDocumentState extends State<DetailDocument> {
                                       const Padding(
                                           padding: EdgeInsets.only(bottom: 5)),
                                       Image.network(
-                                        '${host.BASE_URL_IMG}foto/${widget.document.foto4}',
+                                        '${host.BASE_URL_IMG}document/${widget.document.foto4}',
                                         height: 100,
                                         width: 100,
                                         fit: BoxFit.contain,
@@ -328,7 +328,7 @@ class DetailDocumentState extends State<DetailDocument> {
                                       const Padding(
                                           padding: EdgeInsets.only(bottom: 5)),
                                       Image.network(
-                                        '${host.BASE_URL_IMG}foto/${widget.document.foto5}',
+                                        '${host.BASE_URL_IMG}document/${widget.document.foto5}',
                                         height: 100,
                                         width: 100,
                                         fit: BoxFit.contain,
@@ -348,7 +348,7 @@ class DetailDocumentState extends State<DetailDocument> {
                                       const Padding(
                                           padding: EdgeInsets.only(bottom: 5)),
                                       Image.network(
-                                        '${host.BASE_URL_IMG}foto/${widget.document.foto6}',
+                                        '${host.BASE_URL_IMG}document/${widget.document.foto6}',
                                         height: 100,
                                         width: 100,
                                         fit: BoxFit.contain,
