@@ -1,5 +1,6 @@
 import 'package:foto_app/models/document_model.dart';
 import 'package:flutter/material.dart';
+import 'package:foto_app/views/document.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
@@ -75,15 +76,24 @@ class DetailDocumentState extends State<DetailDocument> {
     var url = "${host.BASE_URL}document/delete";
 
     handle_request.postData(Uri.parse(url), body).then((response) {
+      // (context.findAncestorStateOfType<DocumentState>())?.refreshData();
       Navigator.pop(context, true);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    String documentTanggalData = widget.document.tanggal as String;
     String createDate = widget.document.createdAt as String;
 
     var now = DateTime.now().toString();
+
+    var documentTanggalParse = documentTanggalData != ''
+        ? DateTime.parse(documentTanggalData.split('T')[0])
+        : DateTime.parse(now.split('T')[0]);
+    String documentTanggal =
+        DateFormat('dd MMMM yyy').format(documentTanggalParse);
+
     var date = createDate != ''
         ? DateTime.parse(createDate.split('T')[0])
         : DateTime.parse(now.split('T')[0]);
@@ -196,7 +206,7 @@ class DetailDocumentState extends State<DetailDocument> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    widget.document.tanggal as String,
+                                    documentTanggal,
                                     style: const TextStyle(fontSize: 17.0),
                                   ),
                                 ],

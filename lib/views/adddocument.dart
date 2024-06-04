@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:foto_app/models/category_model.dart';
+import 'package:foto_app/views/document.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
@@ -170,7 +171,7 @@ class AddDocumentState extends State<AddDocument> {
     request.headers["Content-Type"] = 'multipart/form-data';
 
     request.fields['pembuat'] = controllerPembuat.text;
-    request.fields['tanggal'] = documentDate.toString().split(' ')[0];
+    request.fields['tanggal'] = documentDate.toString().split('.')[0];
     request.fields['judul'] = controllerJudul.text.toString();
     request.fields['ringkasan'] = controllerSummary.text.toString();
     request.fields['kategori'] = idCategory;
@@ -235,7 +236,8 @@ class AddDocumentState extends State<AddDocument> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
-        Navigator.of(context).pop();
+        // (context.findAncestorStateOfType<DocumentState>())?.refreshData();
+        Navigator.pushNamed(context, '/document');
       } else if (decodedMap['message'] != null) {
         Fluttertoast.showToast(
             msg: "Gagal menambah dokumen!, ${decodedMap['message']}",
@@ -702,7 +704,7 @@ class AddDocumentState extends State<AddDocument> {
               ),
               backgroundColor: colors.primary,
               padding: const EdgeInsets.all(15)),
-          child: const Text("TAMBAH DOKUMEN",
+          child: const Text("Tambah Dokumen",
               style: TextStyle(color: Colors.white)),
         ),
       ),

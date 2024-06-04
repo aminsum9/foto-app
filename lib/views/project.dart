@@ -205,7 +205,7 @@ class ItemProject extends StatelessWidget {
             title: Row(
               children: [
                 Text(
-                  fotografer,
+                  nama,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],

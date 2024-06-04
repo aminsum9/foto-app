@@ -103,6 +103,21 @@ class DocumentState extends State<Document> {
     });
   }
 
+  // void refreshData() async {
+  //   setState(() {
+  //     loading = true;
+  //     page = 1;
+  //     currentTotalData = 0;
+  //     totalData = 0;
+  //   });
+
+  //   List<DocumentModel> dataTrans = await getDataDocument(1);
+
+  //   setState(() {
+  //     data = dataTrans;
+  //   });
+  // }
+
   void _loadMoreData() {
     getDataDocument(page + 1);
   }

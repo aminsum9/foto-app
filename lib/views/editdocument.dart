@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foto_app/models/category_model.dart';
 import 'package:foto_app/models/document_model.dart';
+import 'package:foto_app/views/document.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
@@ -84,7 +85,7 @@ class EditDocumentState extends State<EditDocument> {
       documentId = document.id.toString();
       selectedCategoryId = document.kategori.toString();
       selectedCategory = document.kategoriData?.kategori ?? "";
-      documentDateData = documentDateData;
+      documentDate = documentDateData;
       imageNetworkFoto = document.foto as String;
       imageNetworkFoto1 = document.foto1 as String;
       imageNetworkFoto2 = document.foto2 as String;
@@ -191,7 +192,7 @@ class EditDocumentState extends State<EditDocument> {
     return prefs.getString(key).toString();
   }
 
-  void addDataDocument(BuildContext context) async {
+  void editDataDocument(BuildContext context) async {
     var token = await getDataStorage('token');
 
     var url = Uri.parse("${host.BASE_URL}document/update");
@@ -220,7 +221,7 @@ class EditDocumentState extends State<EditDocument> {
 
     request.fields['id'] = documentId;
     request.fields['pembuat'] = controllerPembuat.text;
-    request.fields['tanggal'] = documentDate.toString().split(' ')[0];
+    request.fields['tanggal'] = documentDate.toString().split('.')[0];
     request.fields['judul'] = controllerJudul.text.toString();
     request.fields['ringkasan'] = controllerSummary.text.toString();
     request.fields['kategori'] = idCategory;
@@ -285,6 +286,7 @@ class EditDocumentState extends State<EditDocument> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
+        // (context.findAncestorStateOfType<DocumentState>())?.refreshData();
         Navigator.of(context).pop();
         Navigator.of(context).pop();
       } else if (decodedMap['message'] != null) {
@@ -818,7 +820,7 @@ class EditDocumentState extends State<EditDocument> {
         margin: const EdgeInsets.only(left: 16, right: 16, bottom: 10),
         child: TextButton(
           onPressed: () {
-            addDataDocument(context);
+            editDataDocument(context);
           },
           style: TextButton.styleFrom(
               shape: RoundedRectangleBorder(
@@ -827,7 +829,7 @@ class EditDocumentState extends State<EditDocument> {
               backgroundColor: colors.primary,
               padding: const EdgeInsets.all(15)),
           child:
-              const Text("EDIT DOKUMEN", style: TextStyle(color: Colors.white)),
+              const Text("Edit Dokumen", style: TextStyle(color: Colors.white)),
         ),
       ),
     );

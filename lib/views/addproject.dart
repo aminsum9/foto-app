@@ -218,7 +218,7 @@ class AddProjectState extends State<AddProject> {
               ),
               backgroundColor: colors.primary,
               padding: const EdgeInsets.all(15)),
-          child: const Text("TAMBAH Projek",
+          child: const Text("Tambah Projek",
               style: TextStyle(color: Colors.white)),
         ),
       ),
