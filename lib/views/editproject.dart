@@ -18,12 +18,6 @@ class EditProject extends StatefulWidget {
   EditProjectState createState() => EditProjectState();
 }
 
-// class ScreenArguments {
-//   final ProjectModel project;
-
-//   ScreenArguments(this.project);
-// }
-
 class EditProjectState extends State<EditProject> {
   TextEditingController controllerNama = TextEditingController(text: "");
   TextEditingController controllerFotografer = TextEditingController(text: "");
