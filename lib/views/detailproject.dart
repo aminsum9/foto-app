@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foto_app/models/project_model.dart';
+import 'package:foto_app/views/home.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
@@ -74,7 +75,11 @@ class DetailProjectState extends State<DetailProject> {
     var url = "${host.BASE_URL}project/delete";
 
     handle_request.postData(Uri.parse(url), body).then((response) {
-      Navigator.pop(context, true);
+      // Navigator.pop(context, true);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const Home()),
+      );
     });
   }
 

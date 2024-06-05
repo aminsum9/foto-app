@@ -1,6 +1,6 @@
 import 'package:foto_app/models/document_model.dart';
 import 'package:flutter/material.dart';
-import 'package:foto_app/views/document.dart';
+import 'package:foto_app/views/home.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
@@ -77,7 +77,11 @@ class DetailDocumentState extends State<DetailDocument> {
 
     handle_request.postData(Uri.parse(url), body).then((response) {
       // (context.findAncestorStateOfType<DocumentState>())?.refreshData();
-      Navigator.pop(context, true);
+      // Navigator.pop(context, true);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const Home()),
+      );
     });
   }
 

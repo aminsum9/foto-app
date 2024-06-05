@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foto_app/models/category_model.dart';
 import 'package:foto_app/models/document_model.dart';
+import 'package:foto_app/views/dashboard.dart';
 import 'package:foto_app/views/document.dart';
+import 'package:foto_app/views/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
@@ -286,9 +288,12 @@ class EditDocumentState extends State<EditDocument> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
-        // (context.findAncestorStateOfType<DocumentState>())?.refreshData();
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
+        // Navigator.of(context).pop();
+        // Navigator.of(context).pop();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Home()),
+        );
       } else if (decodedMap['message'] != null) {
         Fluttertoast.showToast(
             msg: "Gagal mengubah dokumen!, ${decodedMap['message']}",
