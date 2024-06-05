@@ -1,7 +1,7 @@
 import 'package:foto_app/models/category_model.dart';
 
 class DocumentModel {
-  final int? id;
+  final String? id;
   final String? pembuat;
   final String? foto;
   final String? tanggal;
@@ -40,7 +40,7 @@ class DocumentModel {
 
   factory DocumentModel.fromJson(Map<String, dynamic> json) {
     return DocumentModel(
-      id: int.parse(json["id"].toString()),
+      id: json['id'] as String?,
       pembuat: json['pembuat'] as String?,
       foto: json['foto'] as String?,
       tanggal: json['tanggal'] as String?,

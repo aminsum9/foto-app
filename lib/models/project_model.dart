@@ -1,5 +1,5 @@
 class ProjectModel {
-  final int? id;
+  final String? id;
   final String? gambar;
   final String? nama;
   final String? fotografer;
@@ -18,7 +18,7 @@ class ProjectModel {
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
     return ProjectModel(
-      id: int.parse(json["id"].toString()),
+      id: json['id'] as String?,
       gambar: json['gambar'] as String?,
       nama: json['nama'] as String?,
       fotografer: json['fotografer'] as String?,
