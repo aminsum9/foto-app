@@ -98,6 +98,7 @@ class AccountState extends State<Account> {
                     visible: dataUser != null,
                     child: Column(
                       children: [
+                        const Padding(padding: EdgeInsets.only(top: 15)),
                         ButtonList(
                             onClick: () =>
                                 Navigator.pushNamed(context, '/category'),
