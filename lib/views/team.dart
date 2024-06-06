@@ -102,21 +102,6 @@ class TeamState extends State<Team> {
     });
   }
 
-  // void refreshData() async {
-  //   setState(() {
-  //     loading = true;
-  //     page = 1;
-  //     currentTotalData = 0;
-  //     totalData = 0;
-  //   });
-
-  //   List<TeamModel> dataTrans = await getDataTeam(1);
-
-  //   setState(() {
-  //     data = dataTrans;
-  //   });
-  // }
-
   void _loadMoreData() {
     getDataTeam(page + 1);
   }
@@ -124,7 +109,7 @@ class TeamState extends State<Team> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-        canPop: false,
+        canPop: true,
         child: SafeArea(
             child: Scaffold(
                 floatingActionButton: isUserLogin == true
