@@ -1,6 +1,7 @@
 import 'package:foto_app/views/account.dart';
 import 'package:foto_app/views/addcategory.dart';
 import 'package:foto_app/views/addproject.dart';
+import 'package:foto_app/views/addteam.dart';
 import 'package:foto_app/views/category.dart';
 import 'package:foto_app/views/dashboard.dart';
 import 'package:foto_app/views/document.dart';
@@ -14,6 +15,7 @@ import 'package:foto_app/views/register.dart';
 import 'package:foto_app/views/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:foto_app/styles/colors.dart' as colors;
+import 'package:foto_app/views/team.dart';
 
 class AppRouter extends InheritedWidget {
   final Color color;
@@ -79,6 +81,8 @@ class RouterState extends State<RouterApp> with TickerProviderStateMixin {
               '/account': (context) => const Account(),
               '/category': (context) => const Category(),
               '/add_category': (context) => const AddCategory(),
+              '/team': (context) => const Team(),
+              '/add_team': (context) => const AddTeam(),
             }));
   }
 }

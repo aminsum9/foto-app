@@ -106,6 +106,17 @@ class AccountState extends State<Account> {
                       ],
                     )),
                 Visibility(
+                    visible: dataUser != null,
+                    child: Column(
+                      children: [
+                        ButtonList(
+                            onClick: () =>
+                                Navigator.pushNamed(context, '/team'),
+                            title: 'Team'),
+                        const Divider()
+                      ],
+                    )),
+                Visibility(
                     visible: dataUser == null,
                     child: Column(
                       children: [
