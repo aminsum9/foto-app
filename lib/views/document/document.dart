@@ -1,23 +1,24 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:foto_app/models/document_model.dart';
 import 'package:flutter/material.dart';
-import 'package:foto_app/models/team_model.dart';
-import 'package:foto_app/views/detailteam.dart';
 import 'package:foto_app/widgets/regular_header.dart';
+import 'package:foto_app/views/document/detaildocument.dart';
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
 import 'package:intl/intl.dart';
 import 'package:foto_app/functions/host.dart' as host;
+// import 'package:foto_app/styles/colors.dart' as colors;
 
-class Team extends StatefulWidget {
-  const Team({super.key});
+class Document extends StatefulWidget {
+  const Document({super.key});
 
   @override
-  TeamState createState() => TeamState();
+  DocumentState createState() => DocumentState();
 }
 
-class TeamState extends State<Team> {
-  List<TeamModel> data = [];
+class DocumentState extends State<Document> {
+  List<DocumentModel> data = [];
   bool? isUserLogin;
   int currentTotalData = 0;
   int page = 1;
@@ -35,7 +36,7 @@ class TeamState extends State<Team> {
   }
 
   void getData() async {
-    List<TeamModel> dataTrans = await getDataTeam(1);
+    List<DocumentModel> dataTrans = await getDataDocument(1);
     String token = await handle_storage.getDataStorage('token');
 
     setState(() {
@@ -44,14 +45,14 @@ class TeamState extends State<Team> {
     });
   }
 
-  Future<List<TeamModel>> getDataTeam(int currentPage) async {
+  Future<List<DocumentModel>> getDataDocument(int currentPage) async {
     setState(() {
       page = currentPage;
     });
     var body = {"page": currentPage.toString(), "paging": paging.toString()};
 
-    final response =
-        await handle_request.postData(Uri.parse("${host.BASE_URL}team"), body);
+    final response = await handle_request.postData(
+        Uri.parse("${host.BASE_URL}document"), body);
 
     if (response.statusCode != 200) {
       return [];
@@ -59,13 +60,13 @@ class TeamState extends State<Team> {
 
     var ressponseData = await jsonDecode(response.body);
 
-    List<TeamModel> ressData = [];
+    List<DocumentModel> ressData = [];
 
     if (ressponseData['success'] == true) {
       for (var i = 0; i < ressponseData['data']['data'].length; i++) {
-        dynamic itemTeam = ressponseData['data']['data'][i];
+        dynamic itemDocument = ressponseData['data']['data'][i];
 
-        ressData.add(TeamModel.fromJson(itemTeam));
+        ressData.add(DocumentModel.fromJson(itemDocument));
       }
 
       int dataTotal = ressponseData['data']['total'];
@@ -95,34 +96,49 @@ class TeamState extends State<Team> {
       totalData = 0;
     });
 
-    List<TeamModel> dataTrans = await getDataTeam(1);
+    List<DocumentModel> dataTrans = await getDataDocument(1);
 
     setState(() {
       data = dataTrans;
     });
   }
 
+  // void refreshData() async {
+  //   setState(() {
+  //     loading = true;
+  //     page = 1;
+  //     currentTotalData = 0;
+  //     totalData = 0;
+  //   });
+
+  //   List<DocumentModel> dataTrans = await getDataDocument(1);
+
+  //   setState(() {
+  //     data = dataTrans;
+  //   });
+  // }
+
   void _loadMoreData() {
-    getDataTeam(page + 1);
+    getDataDocument(page + 1);
   }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
-        canPop: true,
+        canPop: false,
         child: SafeArea(
             child: Scaffold(
                 floatingActionButton: isUserLogin == true
                     ? FloatingActionButton(
                         onPressed: () =>
-                            Navigator.pushNamed(context, '/add_team'),
+                            Navigator.pushNamed(context, '/add_document'),
                         backgroundColor: Colors.white,
                         child: const Icon(Icons.add),
                       )
                     : null,
                 body: Column(
                   children: [
-                    RegularHeader(title: 'Team'),
+                    RegularHeader(title: 'Dokumen'),
                     SizedBox(
                       height: MediaQuery.of(context).size.height - 200,
                       child: NotificationListener<ScrollEndNotification>(
@@ -143,7 +159,7 @@ class TeamState extends State<Team> {
                         child: !loading
                             ? data.isEmpty
                                 ? const Center(
-                                    child: Text('Belum ada data Team!'),
+                                    child: Text('Belum ada data Dokumen!'),
                                   )
                                 : RefreshIndicator(
                                     onRefresh: () => _handleRefresh(),
@@ -151,13 +167,12 @@ class TeamState extends State<Team> {
                                       padding: const EdgeInsets.all(8),
                                       itemCount: data.length,
                                       itemBuilder: (context, index) {
-                                        return ItemTeam(
+                                        return ItemDocument(
                                             item: data[index],
-                                            fotografer: data[index].fotografer
-                                                as String,
-                                            videografer: data[index].videografer
-                                                as String,
-                                            teamCreatedAt:
+                                            pembuat:
+                                                data[index].pembuat as String,
+                                            judul: data[index].judul as String,
+                                            docCreatedAt:
                                                 data[index].createdAt as String,
                                             index: index);
                                       },
@@ -173,26 +188,26 @@ class TeamState extends State<Team> {
 }
 
 // ignore: must_be_immutable
-class ItemTeam extends StatelessWidget {
-  String fotografer = '';
-  String videografer = '';
-  String teamCreatedAt = '';
-  TeamModel item;
+class ItemDocument extends StatelessWidget {
+  String pembuat = '';
+  String judul = '';
+  String docCreatedAt = '';
+  DocumentModel item;
   int index = 0;
 
-  ItemTeam(
+  ItemDocument(
       {super.key,
       required this.item,
-      required this.fotografer,
-      required this.videografer,
-      required this.teamCreatedAt,
+      required this.pembuat,
+      required this.judul,
+      required this.docCreatedAt,
       required this.index});
 
   @override
   Widget build(BuildContext context) {
     var now = DateTime.now().toString();
-    var date = teamCreatedAt != ''
-        ? DateTime.parse(teamCreatedAt.split('T')[0])
+    var date = docCreatedAt != ''
+        ? DateTime.parse(docCreatedAt.split('T')[0])
         : DateTime.parse(now.split('T')[0]);
     String createdAt = DateFormat('dd MMMM yyy').format(date);
 
@@ -200,25 +215,20 @@ class ItemTeam extends StatelessWidget {
       child: GestureDetector(
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
             builder: (BuildContext context) =>
-                DetailTeam(team: item, index: index))),
+                DetailDocument(document: item, index: index))),
         child: Card(
           child: ListTile(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            title: Row(
               children: [
                 Text(
-                  "Jumlah Fotografer: $fotografer",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "Jumlah Videografer: $videografer",
+                  judul,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )
               ],
             ),
             subtitle: Text('Dibuat tgl. : $createdAt'),
             leading: const Icon(
-              Icons.group,
+              Icons.document_scanner_outlined,
               size: 40,
               color: Colors.blueGrey,
             ),

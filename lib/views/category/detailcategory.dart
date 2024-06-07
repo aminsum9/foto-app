@@ -1,6 +1,6 @@
 import 'package:foto_app/models/category_model.dart';
 import 'package:flutter/material.dart';
-import 'package:foto_app/views/category.dart';
+import 'package:foto_app/views/category/category.dart';
 import 'package:intl/intl.dart';
 import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;

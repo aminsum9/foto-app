@@ -8,7 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foto_app/models/category_model.dart';
 import 'package:foto_app/models/document_model.dart';
 import 'package:foto_app/views/dashboard.dart';
-import 'package:foto_app/views/document.dart';
+import 'package:foto_app/views/document/document.dart';
 import 'package:foto_app/views/home.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';

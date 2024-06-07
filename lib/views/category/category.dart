@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:foto_app/models/category_model.dart';
 import 'package:flutter/material.dart';
-import 'package:foto_app/views/detailcategory.dart';
+import 'package:foto_app/views/category/detailcategory.dart';
 import 'package:foto_app/widgets/regular_header.dart';
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;

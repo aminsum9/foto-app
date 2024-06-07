@@ -1,24 +1,34 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:foto_app/models/document_model.dart';
 import 'package:flutter/material.dart';
+import 'package:foto_app/models/project_model.dart';
+import 'package:foto_app/views/project/detailproject.dart';
 import 'package:foto_app/widgets/regular_header.dart';
-import 'package:foto_app/views/detaildocument.dart';
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
-import 'package:foto_app/functions/handle_request.dart' as handle_request;
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
-// import 'package:foto_app/styles/colors.dart' as colors;
 
-class Document extends StatefulWidget {
-  const Document({super.key});
+class Project extends StatefulWidget {
+  const Project({super.key});
 
   @override
-  DocumentState createState() => DocumentState();
+  ProjectState createState() => ProjectState();
 }
 
-class DocumentState extends State<Document> {
-  List<DocumentModel> data = [];
+Future<String> getDataStorage(String key) async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString(key).toString();
+}
+
+Future<http.Response> postData(Uri url, dynamic body) async {
+  final response = await http.post(url, body: body);
+  return response;
+}
+
+class ProjectState extends State<Project> {
+  List<ProjectModel> data = [];
   bool? isUserLogin;
   int currentTotalData = 0;
   int page = 1;
@@ -36,7 +46,7 @@ class DocumentState extends State<Document> {
   }
 
   void getData() async {
-    List<DocumentModel> dataTrans = await getDataDocument(1);
+    List<ProjectModel> dataTrans = await getDataProject(1);
     String token = await handle_storage.getDataStorage('token');
 
     setState(() {
@@ -45,14 +55,10 @@ class DocumentState extends State<Document> {
     });
   }
 
-  Future<List<DocumentModel>> getDataDocument(int currentPage) async {
-    setState(() {
-      page = currentPage;
-    });
+  Future<List<ProjectModel>> getDataProject(int currentPage) async {
     var body = {"page": currentPage.toString(), "paging": paging.toString()};
 
-    final response = await handle_request.postData(
-        Uri.parse("${host.BASE_URL}document"), body);
+    final response = await postData(Uri.parse("${host.BASE_URL}project"), body);
 
     if (response.statusCode != 200) {
       return [];
@@ -60,13 +66,13 @@ class DocumentState extends State<Document> {
 
     var ressponseData = await jsonDecode(response.body);
 
-    List<DocumentModel> ressData = [];
+    List<ProjectModel> ressData = [];
 
     if (ressponseData['success'] == true) {
       for (var i = 0; i < ressponseData['data']['data'].length; i++) {
-        dynamic itemDocument = ressponseData['data']['data'][i];
+        dynamic itemProject = ressponseData['data']['data'][i];
 
-        ressData.add(DocumentModel.fromJson(itemDocument));
+        ressData.add(ProjectModel.fromJson(itemProject));
       }
 
       int dataTotal = ressponseData['data']['total'];
@@ -83,43 +89,20 @@ class DocumentState extends State<Document> {
       setState(() {
         loading = false;
       });
-
       return ressData;
     }
   }
 
   Future<void> _handleRefresh() async {
-    setState(() {
-      loading = true;
-      page = 1;
-      currentTotalData = 0;
-      totalData = 0;
-    });
-
-    List<DocumentModel> dataTrans = await getDataDocument(1);
+    List<ProjectModel> dataTrans = await getDataProject(1);
 
     setState(() {
       data = dataTrans;
     });
   }
 
-  // void refreshData() async {
-  //   setState(() {
-  //     loading = true;
-  //     page = 1;
-  //     currentTotalData = 0;
-  //     totalData = 0;
-  //   });
-
-  //   List<DocumentModel> dataTrans = await getDataDocument(1);
-
-  //   setState(() {
-  //     data = dataTrans;
-  //   });
-  // }
-
   void _loadMoreData() {
-    getDataDocument(page + 1);
+    getDataProject(page + 1);
   }
 
   @override
@@ -131,14 +114,14 @@ class DocumentState extends State<Document> {
                 floatingActionButton: isUserLogin == true
                     ? FloatingActionButton(
                         onPressed: () =>
-                            Navigator.pushNamed(context, '/add_document'),
+                            Navigator.pushNamed(context, '/add_project'),
                         backgroundColor: Colors.white,
                         child: const Icon(Icons.add),
                       )
                     : null,
                 body: Column(
                   children: [
-                    RegularHeader(title: 'Dokumen'),
+                    RegularHeader(title: 'Projek'),
                     SizedBox(
                       height: MediaQuery.of(context).size.height - 200,
                       child: NotificationListener<ScrollEndNotification>(
@@ -156,30 +139,31 @@ class DocumentState extends State<Document> {
                           }
                           return true;
                         },
-                        child: !loading
-                            ? data.isEmpty
-                                ? const Center(
-                                    child: Text('Belum ada data Dokumen!'),
-                                  )
-                                : RefreshIndicator(
-                                    onRefresh: () => _handleRefresh(),
-                                    child: ListView.builder(
+                        child: RefreshIndicator(
+                          onRefresh: () => _handleRefresh(),
+                          child: !loading
+                              ? data.isEmpty
+                                  ? const Center(
+                                      child: Text('Belum ada data Projek!'),
+                                    )
+                                  : ListView.builder(
                                       padding: const EdgeInsets.all(8),
                                       itemCount: data.length,
                                       itemBuilder: (context, index) {
-                                        return ItemDocument(
+                                        return ItemProject(
                                             item: data[index],
-                                            pembuat:
-                                                data[index].pembuat as String,
-                                            judul: data[index].judul as String,
-                                            docCreatedAt:
+                                            nama: data[index].nama as String,
+                                            fotografer: data[index].fotografer
+                                                as String,
+                                            createdAt:
                                                 data[index].createdAt as String,
                                             index: index);
                                       },
-                                    ))
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
+                                    )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                        ),
                       ),
                     )
                   ],
@@ -188,47 +172,47 @@ class DocumentState extends State<Document> {
 }
 
 // ignore: must_be_immutable
-class ItemDocument extends StatelessWidget {
-  String pembuat = '';
-  String judul = '';
-  String docCreatedAt = '';
-  DocumentModel item;
+class ItemProject extends StatelessWidget {
+  String nama = '';
+  String fotografer = '';
+  String createdAt = '';
+  ProjectModel item;
   int index = 0;
 
-  ItemDocument(
+  ItemProject(
       {super.key,
       required this.item,
-      required this.pembuat,
-      required this.judul,
-      required this.docCreatedAt,
+      required this.nama,
+      required this.fotografer,
+      required this.createdAt,
       required this.index});
 
   @override
   Widget build(BuildContext context) {
     var now = DateTime.now().toString();
-    var date = docCreatedAt != ''
-        ? DateTime.parse(docCreatedAt.split('T')[0])
+    var date = createdAt != ''
+        ? DateTime.parse(createdAt.split('T')[0])
         : DateTime.parse(now.split('T')[0]);
-    String createdAt = DateFormat('dd MMMM yyy').format(date);
+    String projectCreatedAt = DateFormat('dd MMMM yyy').format(date);
 
     return SizedBox(
       child: GestureDetector(
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
             builder: (BuildContext context) =>
-                DetailDocument(document: item, index: index))),
+                DetailProject(project: item, index: index))),
         child: Card(
           child: ListTile(
             title: Row(
               children: [
                 Text(
-                  judul,
+                  nama,
                   style: const TextStyle(fontWeight: FontWeight.bold),
-                )
+                ),
               ],
             ),
-            subtitle: Text('Dibuat tgl. : $createdAt'),
+            subtitle: Text('Dibuat tgl. : $projectCreatedAt'),
             leading: const Icon(
-              Icons.document_scanner_outlined,
+              Icons.build_circle,
               size: 40,
               color: Colors.blueGrey,
             ),

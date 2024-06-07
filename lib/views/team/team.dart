@@ -1,34 +1,23 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:foto_app/models/project_model.dart';
-import 'package:foto_app/views/detailproject.dart';
+import 'package:foto_app/models/team_model.dart';
+import 'package:foto_app/views/team/detailteam.dart';
 import 'package:foto_app/widgets/regular_header.dart';
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
-import 'package:http/http.dart' as http;
+import 'package:foto_app/functions/handle_request.dart' as handle_request;
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
 
-class Project extends StatefulWidget {
-  const Project({super.key});
+class Team extends StatefulWidget {
+  const Team({super.key});
 
   @override
-  ProjectState createState() => ProjectState();
+  TeamState createState() => TeamState();
 }
 
-Future<String> getDataStorage(String key) async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString(key).toString();
-}
-
-Future<http.Response> postData(Uri url, dynamic body) async {
-  final response = await http.post(url, body: body);
-  return response;
-}
-
-class ProjectState extends State<Project> {
-  List<ProjectModel> data = [];
+class TeamState extends State<Team> {
+  List<TeamModel> data = [];
   bool? isUserLogin;
   int currentTotalData = 0;
   int page = 1;
@@ -46,7 +35,7 @@ class ProjectState extends State<Project> {
   }
 
   void getData() async {
-    List<ProjectModel> dataTrans = await getDataProject(1);
+    List<TeamModel> dataTrans = await getDataTeam(1);
     String token = await handle_storage.getDataStorage('token');
 
     setState(() {
@@ -55,10 +44,14 @@ class ProjectState extends State<Project> {
     });
   }
 
-  Future<List<ProjectModel>> getDataProject(int currentPage) async {
+  Future<List<TeamModel>> getDataTeam(int currentPage) async {
+    setState(() {
+      page = currentPage;
+    });
     var body = {"page": currentPage.toString(), "paging": paging.toString()};
 
-    final response = await postData(Uri.parse("${host.BASE_URL}project"), body);
+    final response =
+        await handle_request.postData(Uri.parse("${host.BASE_URL}team"), body);
 
     if (response.statusCode != 200) {
       return [];
@@ -66,13 +59,13 @@ class ProjectState extends State<Project> {
 
     var ressponseData = await jsonDecode(response.body);
 
-    List<ProjectModel> ressData = [];
+    List<TeamModel> ressData = [];
 
     if (ressponseData['success'] == true) {
       for (var i = 0; i < ressponseData['data']['data'].length; i++) {
-        dynamic itemProject = ressponseData['data']['data'][i];
+        dynamic itemTeam = ressponseData['data']['data'][i];
 
-        ressData.add(ProjectModel.fromJson(itemProject));
+        ressData.add(TeamModel.fromJson(itemTeam));
       }
 
       int dataTotal = ressponseData['data']['total'];
@@ -89,12 +82,20 @@ class ProjectState extends State<Project> {
       setState(() {
         loading = false;
       });
+
       return ressData;
     }
   }
 
   Future<void> _handleRefresh() async {
-    List<ProjectModel> dataTrans = await getDataProject(1);
+    setState(() {
+      loading = true;
+      page = 1;
+      currentTotalData = 0;
+      totalData = 0;
+    });
+
+    List<TeamModel> dataTrans = await getDataTeam(1);
 
     setState(() {
       data = dataTrans;
@@ -102,26 +103,26 @@ class ProjectState extends State<Project> {
   }
 
   void _loadMoreData() {
-    getDataProject(page + 1);
+    getDataTeam(page + 1);
   }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
-        canPop: false,
+        canPop: true,
         child: SafeArea(
             child: Scaffold(
                 floatingActionButton: isUserLogin == true
                     ? FloatingActionButton(
                         onPressed: () =>
-                            Navigator.pushNamed(context, '/add_project'),
+                            Navigator.pushNamed(context, '/add_team'),
                         backgroundColor: Colors.white,
                         child: const Icon(Icons.add),
                       )
                     : null,
                 body: Column(
                   children: [
-                    RegularHeader(title: 'Projek'),
+                    RegularHeader(title: 'Team'),
                     SizedBox(
                       height: MediaQuery.of(context).size.height - 200,
                       child: NotificationListener<ScrollEndNotification>(
@@ -139,31 +140,31 @@ class ProjectState extends State<Project> {
                           }
                           return true;
                         },
-                        child: RefreshIndicator(
-                          onRefresh: () => _handleRefresh(),
-                          child: !loading
-                              ? data.isEmpty
-                                  ? const Center(
-                                      child: Text('Belum ada data Projek!'),
-                                    )
-                                  : ListView.builder(
+                        child: !loading
+                            ? data.isEmpty
+                                ? const Center(
+                                    child: Text('Belum ada data Team!'),
+                                  )
+                                : RefreshIndicator(
+                                    onRefresh: () => _handleRefresh(),
+                                    child: ListView.builder(
                                       padding: const EdgeInsets.all(8),
                                       itemCount: data.length,
                                       itemBuilder: (context, index) {
-                                        return ItemProject(
+                                        return ItemTeam(
                                             item: data[index],
-                                            nama: data[index].nama as String,
                                             fotografer: data[index].fotografer
                                                 as String,
-                                            createdAt:
+                                            videografer: data[index].videografer
+                                                as String,
+                                            teamCreatedAt:
                                                 data[index].createdAt as String,
                                             index: index);
                                       },
-                                    )
-                              : const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                        ),
+                                    ))
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                       ),
                     )
                   ],
@@ -172,47 +173,52 @@ class ProjectState extends State<Project> {
 }
 
 // ignore: must_be_immutable
-class ItemProject extends StatelessWidget {
-  String nama = '';
+class ItemTeam extends StatelessWidget {
   String fotografer = '';
-  String createdAt = '';
-  ProjectModel item;
+  String videografer = '';
+  String teamCreatedAt = '';
+  TeamModel item;
   int index = 0;
 
-  ItemProject(
+  ItemTeam(
       {super.key,
       required this.item,
-      required this.nama,
       required this.fotografer,
-      required this.createdAt,
+      required this.videografer,
+      required this.teamCreatedAt,
       required this.index});
 
   @override
   Widget build(BuildContext context) {
     var now = DateTime.now().toString();
-    var date = createdAt != ''
-        ? DateTime.parse(createdAt.split('T')[0])
+    var date = teamCreatedAt != ''
+        ? DateTime.parse(teamCreatedAt.split('T')[0])
         : DateTime.parse(now.split('T')[0]);
-    String projectCreatedAt = DateFormat('dd MMMM yyy').format(date);
+    String createdAt = DateFormat('dd MMMM yyy').format(date);
 
     return SizedBox(
       child: GestureDetector(
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
             builder: (BuildContext context) =>
-                DetailProject(project: item, index: index))),
+                DetailTeam(team: item, index: index))),
         child: Card(
           child: ListTile(
-            title: Row(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  nama,
+                  "Jumlah Fotografer: $fotografer",
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
+                Text(
+                  "Jumlah Videografer: $videografer",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                )
               ],
             ),
-            subtitle: Text('Dibuat tgl. : $projectCreatedAt'),
+            subtitle: Text('Dibuat tgl. : $createdAt'),
             leading: const Icon(
-              Icons.build_circle,
+              Icons.group,
               size: 40,
               color: Colors.blueGrey,
             ),

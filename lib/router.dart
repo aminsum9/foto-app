@@ -1,21 +1,21 @@
 import 'package:foto_app/views/account.dart';
-import 'package:foto_app/views/addcategory.dart';
-import 'package:foto_app/views/addproject.dart';
-import 'package:foto_app/views/addteam.dart';
-import 'package:foto_app/views/category.dart';
+import 'package:foto_app/views/category/addcategory.dart';
+import 'package:foto_app/views/project/addproject.dart';
+import 'package:foto_app/views/team/addteam.dart';
+import 'package:foto_app/views/category/category.dart';
 import 'package:foto_app/views/dashboard.dart';
-import 'package:foto_app/views/document.dart';
-import 'package:foto_app/views/adddocument.dart';
-import 'package:foto_app/views/editdocument.dart';
-import 'package:foto_app/views/editproject.dart';
+import 'package:foto_app/views/document/document.dart';
+import 'package:foto_app/views/document/adddocument.dart';
+import 'package:foto_app/views/document/editdocument.dart';
+import 'package:foto_app/views/project/editproject.dart';
 import 'package:foto_app/views/home.dart';
 import 'package:foto_app/views/login.dart';
-import 'package:foto_app/views/project.dart';
+import 'package:foto_app/views/project/project.dart';
 import 'package:foto_app/views/register.dart';
 import 'package:foto_app/views/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:foto_app/styles/colors.dart' as colors;
-import 'package:foto_app/views/team.dart';
+import 'package:foto_app/views/team/team.dart';
 
 class AppRouter extends InheritedWidget {
   final Color color;
