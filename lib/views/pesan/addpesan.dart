@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -16,6 +17,8 @@ class AddPesan extends StatefulWidget {
 class AddPesanState extends State<AddPesan> {
   dynamic dataUser;
 
+  FilePickerResult? fileSurat;
+
   DateTime tanggalAwal = DateTime.now();
   TimeOfDay waktuAwal = TimeOfDay.now();
   DateTime tanggalAkhir = DateTime.now();
@@ -31,22 +34,22 @@ class AddPesanState extends State<AddPesan> {
   TextEditingController controllerVideografer = TextEditingController(text: "");
   TextEditingController controllerLink = TextEditingController(text: "");
 
-  // this.nomor_surat,
-  // this.file_surat,
-  // this.satuan_kerja,
-  // this.nama,
-  // this.nama_project,
-  // this.tanggal_awal,
-  // this.waktu_awal,
-  // this.tanggal_akhir,
-  // this.waktu_akhir,
-  // this.tempat,
-  // this.acara,
-  // this.fotografer,
-  // this.videografer,
-  // this.status,
-  // this.link,
-  // this.users_id,
+  // nomor_surat,
+  // file_surat,
+  // satuan_kerja,
+  // nama,
+  // nama_project,
+  // tanggal_awal,
+  // waktu_awal,
+  // tanggal_akhir,
+  // waktu_akhir,
+  // tempat,
+  // acara,
+  // fotografer,
+  // videografer,
+  // status,
+  // link,
+  // users_id,
 
   @override
   void initState() {
@@ -73,7 +76,6 @@ class AddPesanState extends State<AddPesan> {
     request.headers["Content-Type"] = 'multipart/form-data';
 
     request.fields['nomor_surat'] = controllerNomorSurat.text;
-    request.fields['file_surat'] = ''; //
     request.fields['satuan_kerja'] = controllerSatuanKerja.text;
     request.fields['nama'] = controllerNamaSurat.text;
     request.fields['nama_project'] = controllerNamaProject.text;
@@ -81,11 +83,13 @@ class AddPesanState extends State<AddPesan> {
     // tanggal_awal,
     request.fields['tanggal_awal'] = tanggalAwal.toString().split('.')[0];
     // waktu_awal,
-    request.fields['waktu_awal'] = waktuAwal.toString();
+    request.fields['waktu_awal'] =
+        "${waktuAwal.hour.toString()}:${waktuAwal.minute.toString()}:00";
     // tanggal_akhir,
-    request.fields['tanggal_akhir'] = tanggalAwal.toString().split('.')[0];
+    request.fields['tanggal_akhir'] = tanggalAkhir.toString().split('.')[0];
     // waktu_akhir,
-    request.fields['waktu_akhir'] = waktuAkhir.toString();
+    request.fields['waktu_akhir'] =
+        "${waktuAkhir.hour.toString()}:${waktuAkhir.minute.toString()}:00";
 
     request.fields['tempat'] = controllerTempat.text;
     request.fields['acara'] = controllerAcara.text;
@@ -93,7 +97,16 @@ class AddPesanState extends State<AddPesan> {
     request.fields['videografer'] = controllerVideografer.text.toString();
     // --- status
     request.fields['link'] = controllerLink.text.toString();
-    request.fields['user_id'] = dataUser['id'].toString();
+    request.fields['users_id'] = dataUser['id'].toString();
+
+    if (fileSurat != null) {
+      if (fileSurat!.paths.isNotEmpty) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'file_surat',
+          fileSurat!.paths[0] as String,
+        ));
+      }
+    }
 
     final response = await request.send();
 
@@ -187,6 +200,19 @@ class AddPesanState extends State<AddPesan> {
     if (selectedTime != null && selectedTime != waktuAkhir) {
       setState(() {
         waktuAkhir = selectedTime;
+      });
+    }
+  }
+
+  Future<void> selectFileSurat() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (result != null) {
+      setState(() {
+        fileSurat = result;
       });
     }
   }
@@ -308,6 +334,20 @@ class AddPesanState extends State<AddPesan> {
                               left: 14, top: 10, right: 14, bottom: 10),
                           child: Text(
                               "Waktu Akhir: ${waktuAkhir.hour}:${waktuAkhir.minute}"))),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(5.0),
+                ),
+                TextButton(
+                  onPressed: () {
+                    selectFileSurat();
+                  },
+                  child: Card(
+                      child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 14, top: 10, right: 14, bottom: 10),
+                          child: Text(
+                              "File Surat: ${fileSurat != null ? fileSurat?.names[0].toString() : '-'}"))),
                 ),
                 const Padding(
                   padding: EdgeInsets.all(10.0),

@@ -209,7 +209,7 @@ class ItemPesan extends StatelessWidget {
             ),
             subtitle: Text('Dibuat tgl. : $pesanCreatedAt'),
             leading: const Icon(
-              Icons.build_circle,
+              Icons.document_scanner_outlined,
               size: 40,
               color: Colors.blueGrey,
             ),

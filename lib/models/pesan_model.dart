@@ -1,5 +1,5 @@
 class PesanModel {
-  final int? id;
+  final String? id;
   final String? nomor_surat;
   final String? file_surat;
   final String? satuan_kerja;
@@ -42,7 +42,7 @@ class PesanModel {
 
   factory PesanModel.fromJson(Map<String, dynamic> json) {
     return PesanModel(
-      id: int.parse(json["id"].toString()),
+      id: json["id"] as String?,
       nomor_surat: json['nomor_surat'] as String?,
       file_surat: json['file_surat'] as String?,
       satuan_kerja: json['satuan_kerja'] as String?,
@@ -58,7 +58,7 @@ class PesanModel {
       videografer: json['videografer'] as String?,
       status: json['status'] as String?,
       link: json['link'] as String?,
-      users_id: json['users_id'] as String?,
+      users_id: json["iuser_idd"].toString() as String?,
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
     );
