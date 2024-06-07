@@ -1,5 +1,7 @@
 import 'package:foto_app/views/account.dart';
 import 'package:foto_app/views/category/addcategory.dart';
+import 'package:foto_app/views/pesan/addpesan.dart';
+import 'package:foto_app/views/pesan/pesan.dart';
 import 'package:foto_app/views/project/addproject.dart';
 import 'package:foto_app/views/team/addteam.dart';
 import 'package:foto_app/views/category/category.dart';
@@ -83,6 +85,8 @@ class RouterState extends State<RouterApp> with TickerProviderStateMixin {
               '/add_category': (context) => const AddCategory(),
               '/team': (context) => const Team(),
               '/add_team': (context) => const AddTeam(),
+              '/pesan': (context) => const Pesan(),
+              '/add_pesan': (context) => const AddPesan(),
             }));
   }
 }

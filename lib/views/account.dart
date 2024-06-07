@@ -118,6 +118,17 @@ class AccountState extends State<Account> {
                       ],
                     )),
                 Visibility(
+                    visible: dataUser != null,
+                    child: Column(
+                      children: [
+                        ButtonList(
+                            onClick: () =>
+                                Navigator.pushNamed(context, '/pesan'),
+                            title: 'Pesan'),
+                        const Divider()
+                      ],
+                    )),
+                Visibility(
                     visible: dataUser == null,
                     child: Column(
                       children: [
