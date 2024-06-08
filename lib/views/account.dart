@@ -66,6 +66,7 @@ class AccountState extends State<Account> {
           body: SafeArea(
               child: Container(
             padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
+            color: Colors.white,
             child: Column(
               children: [
                 Container(
@@ -102,7 +103,7 @@ class AccountState extends State<Account> {
                                             right: 5,
                                             top: 2,
                                             bottom: 2),
-                                        margin: const EdgeInsets.only(left: 10),
+                                        margin: const EdgeInsets.only(left: 5),
                                         decoration: BoxDecoration(
                                             color: Colors.blue,
                                             borderRadius:
@@ -110,9 +111,9 @@ class AccountState extends State<Account> {
                                             border: Border.all(
                                                 color: Colors.blueAccent)),
                                         child: Text(
-                                          isAdmin == true ? 'Admnin' : 'User',
+                                          isAdmin == true ? 'Admin' : 'User',
                                           style: const TextStyle(
-                                              fontSize: 20,
+                                              fontSize: 15,
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold),
                                         ),

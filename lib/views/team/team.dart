@@ -111,9 +111,8 @@ class TeamState extends State<Team> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-        canPop: true,
-        child: SafeArea(
+    return Scaffold(
+        body: SafeArea(
             child: Scaffold(
                 floatingActionButton: isUserLogin == true && isAdmin == true
                     ? FloatingActionButton(
