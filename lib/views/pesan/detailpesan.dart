@@ -1,11 +1,18 @@
+import 'dart:io';
+
+import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foto_app/models/pesan_model.dart';
-import 'package:foto_app/views/home.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
+import 'package:path/path.dart' as path;
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 
 // ignore: must_be_immutable
 class DetailPesan extends StatefulWidget {
@@ -54,6 +61,21 @@ class DetailPesanState extends State<DetailPesan> {
     super.initState();
 
     getStorageToken();
+    requestPermission();
+  }
+
+  void requestPermission() async {
+    if (await Permission.storage.request().isGranted) {
+      print(' storage granted');
+      if (await Permission.manageExternalStorage.request().isGranted) {
+        print(' manage storage granted');
+        // Either the permission was already granted before or the user just granted it.
+      } else {
+        print(' manage storage not granted');
+      }
+    } else {
+      print(' storage not granted');
+    }
   }
 
   void getStorageToken() async {
@@ -80,6 +102,47 @@ class DetailPesanState extends State<DetailPesan> {
       Navigator.pop(context, true);
       Navigator.pop(context, true);
     });
+  }
+
+  void downloadFile(String fileSurat) async {
+    print("tes: $fileSurat");
+    var url =
+        "${host.BASE_URL}pesan/file-surat?file-surat=${widget.pesan.file_surat}";
+
+    var response = await handle_request.getData(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      var storageDirectory = await ExternalPath.getExternalStorageDirectories();
+      var directoryDownload = ExternalPath.DIRECTORY_DOWNLOADS;
+
+      var filePath = path.join(
+          "${storageDirectory.first.toString()}/$directoryDownload/",
+          fileSurat);
+
+      File file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+
+      // OpenFile.open(filePath);
+
+      Fluttertoast.showToast(
+          msg:
+              "Berhasil mendownload file surat, tersimpan di memory internal 'Download'",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    } else {
+      Fluttertoast.showToast(
+          msg: "Gagal mendownload file surat!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 
   // nomor_surat,
@@ -159,7 +222,7 @@ class DetailPesanState extends State<DetailPesan> {
                         ),
                       ),
                       const Padding(
-                        padding: EdgeInsets.all(15.0),
+                        padding: EdgeInsets.only(top: 10.0),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 30),
@@ -393,6 +456,25 @@ class DetailPesanState extends State<DetailPesan> {
                                     maxLines: 2,
                                     style: const TextStyle(fontSize: 17.0),
                                   ),
+                                  const Padding(
+                                      padding: EdgeInsets.only(top: 5)),
+                                  GestureDetector(
+                                    onTap: () => downloadFile(
+                                        widget.pesan.file_surat.toString()),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(5),
+                                      decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: Colors.blueAccent)),
+                                      child: const Text(
+                                        'download file',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
                             ]),

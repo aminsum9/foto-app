@@ -8,3 +8,15 @@ Future<http.Response> postData(Uri url, dynamic body) async {
       .post(url, body: body, headers: {'authorization': 'Bearer $token'});
   return response;
 }
+
+Future<http.Response> getData(Uri url) async {
+  var token = await handle_storage.getDataStorage('token');
+
+  Map<String, String> headers = {
+    "authorization": "Bearer $token",
+  };
+
+  final response = await http.get(url, headers: headers);
+
+  return response;
+}

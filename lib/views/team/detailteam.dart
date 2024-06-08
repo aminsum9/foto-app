@@ -117,11 +117,12 @@ class DetailTeamState extends State<DetailTeam> {
         body: Container(
             padding: const EdgeInsets.all(20.0),
             child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Card(
-                  color: Colors.white,
-                  child: Center(
-                    child: Column(children: [
+              scrollDirection: Axis.vertical,
+              child: Card(
+                color: Colors.white,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       const Padding(
                         padding: EdgeInsets.all(15.0),
                       ),
@@ -149,6 +150,10 @@ class DetailTeamState extends State<DetailTeam> {
                                   borderRadius: BorderRadius.circular(20.0))),
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text('Dibuat tanggal: $createdAt'),
+                      ),
                       Row(
                         children: [
                           TextButton(
@@ -164,7 +169,7 @@ class DetailTeamState extends State<DetailTeam> {
                         ],
                       ),
                     ]),
-                  ),
-                ))));
+              ),
+            )));
   }
 }
