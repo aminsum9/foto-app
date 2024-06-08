@@ -74,19 +74,47 @@ class DetailPesanState extends State<DetailPesan> {
     var url = "${host.BASE_URL}pesan/delete";
 
     handle_request.postData(Uri.parse(url), body).then((response) {
-      // Navigator.pop(context, true);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Home()),
-      );
+      Navigator.pop(context, true);
+      Navigator.pop(context, true);
     });
   }
 
+  // nomor_surat,
+  // file_surat,
+  // satuan_kerja,
+  // nama,
+  // nama_project,
+  // tanggal_awal,
+  // waktu_awal,
+  // tanggal_akhir,
+  // waktu_akhir,
+  // tempat,
+  // acara,
+  // fotografer,
+  // videografer,
+  // status,
+  // link,
+  // users_id,
+
   @override
   Widget build(BuildContext context) {
+    String tanggalAwalData = widget.pesan.tanggal_awal as String;
+    String tanggalAkhirData = widget.pesan.tanggal_akhir as String;
+
     String createDate = widget.pesan.createdAt as String;
 
     var now = DateTime.now().toString();
+
+    var tanggalAwalDate = tanggalAwalData != ''
+        ? DateTime.parse(tanggalAwalData.split(' ')[0])
+        : DateTime.parse(now.split('T')[0]);
+    String tanggalAwal = DateFormat('dd MMMM yyy').format(tanggalAwalDate);
+
+    var tanggalAkhirDate = tanggalAkhirData != ''
+        ? DateTime.parse(tanggalAkhirData.split(' ')[0])
+        : DateTime.parse(now.split('T')[0]);
+    String tanggalAkhir = DateFormat('dd MMMM yyy').format(tanggalAkhirDate);
+
     var date = createDate != ''
         ? DateTime.parse(createDate.split('T')[0])
         : DateTime.parse(now.split('T')[0]);
@@ -141,6 +169,34 @@ class DetailPesanState extends State<DetailPesan> {
                               Row(
                                 children: [
                                   const Text(
+                                    "No. Surat : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    "${widget.pesan.nomor_surat}",
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Satuan Kerja : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    "${widget.pesan.satuan_kerja}",
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
                                     "Nama            : ",
                                     style: TextStyle(
                                         fontSize: 17.0,
@@ -148,6 +204,104 @@ class DetailPesanState extends State<DetailPesan> {
                                   ),
                                   Text(
                                     "${widget.pesan.nama}",
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Nama Projek : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    "${widget.pesan.nama_project}",
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Tanggal Awal : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    tanggalAwal,
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Waktu Awal : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    widget.pesan.waktu_awal as String,
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Tanggal Akhir : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    tanggalAkhir,
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Waktu Akhir : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    widget.pesan.waktu_akhir as String,
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Tempat : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    widget.pesan.tempat as String,
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Acara : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    widget.pesan.acara as String,
                                     style: const TextStyle(fontSize: 17.0),
                                   ),
                                 ],
@@ -183,6 +337,34 @@ class DetailPesanState extends State<DetailPesan> {
                               Row(
                                 children: [
                                   const Text(
+                                    "Status  : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    widget.pesan.status as String,
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Link  : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    widget.pesan.link as String,
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
                                     "Dibuat Tgl.    : ",
                                     style: TextStyle(
                                         fontSize: 17.0,
@@ -190,6 +372,22 @@ class DetailPesanState extends State<DetailPesan> {
                                   ),
                                   Text(
                                     createdAt,
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "File Surat : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    "${widget.pesan.file_surat}",
+                                    maxLines: 2,
                                     style: const TextStyle(fontSize: 17.0),
                                   ),
                                 ],
