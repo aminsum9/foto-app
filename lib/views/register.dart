@@ -129,6 +129,7 @@ class RegisterState extends State<Register> {
                               TextField(controller: name),
                               const Text('Email:'),
                               TextField(
+                                keyboardType: TextInputType.emailAddress,
                                 controller: email,
                               ),
                               const Text('Password:'),

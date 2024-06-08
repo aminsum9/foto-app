@@ -79,6 +79,7 @@ class LoginState extends State<Login> {
                   children: [
                     const Text('Email:'),
                     TextField(
+                      keyboardType: TextInputType.emailAddress,
                       controller: email,
                     ),
                     const Text('Password:'),
@@ -123,7 +124,6 @@ class BottomContainerState extends State<BottomContainer> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
-    double width = MediaQuery.sizeOf(context).width;
 
     return Container(
       alignment: Alignment.center,

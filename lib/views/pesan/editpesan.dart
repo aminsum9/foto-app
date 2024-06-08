@@ -173,6 +173,7 @@ class EditPesanState extends State<EditPesan> {
     request.headers["Authorization"] = 'Bearer $token';
     request.headers["Content-Type"] = 'multipart/form-data';
 
+    request.fields['id'] = pesanId;
     request.fields['nomor_surat'] = controllerNomorSurat.text;
     request.fields['satuan_kerja'] = controllerSatuanKerja.text;
     request.fields['nama'] = controllerNamaSurat.text;
@@ -220,7 +221,11 @@ class EditPesanState extends State<EditPesan> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pop();
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
       } else if (decodedMap['message'] != null) {
         Fluttertoast.showToast(
