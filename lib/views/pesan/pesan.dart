@@ -7,7 +7,6 @@ import 'package:foto_app/widgets/regular_header.dart';
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
 
 class Pesan extends StatefulWidget {
@@ -15,11 +14,6 @@ class Pesan extends StatefulWidget {
 
   @override
   PesanState createState() => PesanState();
-}
-
-Future<String> getDataStorage(String key) async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString(key).toString();
 }
 
 Future<http.Response> postData(Uri url, dynamic body) async {

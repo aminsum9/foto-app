@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foto_app/views/home.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/styles/colors.dart' as colors;
+import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 
 class AddProject extends StatefulWidget {
   const AddProject({super.key});
@@ -42,13 +42,8 @@ class AddProjectState extends State<AddProject> {
     return File(imagePath);
   }
 
-  Future<String> getDataStorage(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(key).toString();
-  }
-
   void addDataProject(BuildContext context) async {
-    var token = await getDataStorage('token');
+    var token = await handle_storage.getDataStorage('token');
 
     var url = Uri.parse("${host.BASE_URL}project/add");
 

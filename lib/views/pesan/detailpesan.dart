@@ -6,13 +6,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foto_app/models/pesan_model.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
 import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
 
 // ignore: must_be_immutable
 class DetailPesan extends StatefulWidget {
@@ -65,16 +64,10 @@ class DetailPesanState extends State<DetailPesan> {
   }
 
   void requestPermission() async {
-    if (await Permission.storage.request().isGranted) {
-      print(' storage granted');
-      if (await Permission.manageExternalStorage.request().isGranted) {
-        print(' manage storage granted');
-        // Either the permission was already granted before or the user just granted it.
-      } else {
-        print(' manage storage not granted');
-      }
+    if (await Permission.manageExternalStorage.request().isGranted) {
+      print(' manage storage granted');
     } else {
-      print(' storage not granted');
+      print(' manage storage not granted');
     }
   }
 
@@ -86,11 +79,6 @@ class DetailPesanState extends State<DetailPesan> {
       isUserLogin = token != '' && token != "null";
       isAdmin = roleUsers == 'Administrator';
     });
-  }
-
-  Future<String> getDataStorage(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(key).toString();
   }
 
   void deleteData(PesanModel pesan) async {
@@ -105,7 +93,6 @@ class DetailPesanState extends State<DetailPesan> {
   }
 
   void downloadFile(String fileSurat) async {
-    print("tes: $fileSurat");
     var url =
         "${host.BASE_URL}pesan/file-surat?file-surat=${widget.pesan.file_surat}";
 
@@ -122,17 +109,41 @@ class DetailPesanState extends State<DetailPesan> {
       File file = File(filePath);
       await file.writeAsBytes(response.bodyBytes);
 
-      // OpenFile.open(filePath);
-
       Fluttertoast.showToast(
           msg:
-              "Berhasil mendownload file surat, tersimpan di memory internal 'Download'",
+              "Berhasil mendownload file surat, tersimpan di penyimpanan internal 'Download'",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.TOP,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0);
+
+      showDialog<void>(
+        // ignore: use_build_context_synchronously
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Hapus Projek?'),
+            content: const Text("Apakah anda yakin ingin membuka file?"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child:
+                    const Text("TIDAK", style: TextStyle(color: Colors.black)),
+              ),
+              TextButton(
+                child: const Text('BUKA', style: TextStyle(color: Colors.red)),
+                onPressed: () {
+                  Navigator.pop(context, true);
+                  OpenFile.open(filePath);
+                },
+              ),
+            ],
+          );
+        },
+      );
     } else {
       Fluttertoast.showToast(
           msg: "Gagal mendownload file surat!",
@@ -144,23 +155,6 @@ class DetailPesanState extends State<DetailPesan> {
           fontSize: 16.0);
     }
   }
-
-  // nomor_surat,
-  // file_surat,
-  // satuan_kerja,
-  // nama,
-  // nama_project,
-  // tanggal_awal,
-  // waktu_awal,
-  // tanggal_akhir,
-  // waktu_akhir,
-  // tempat,
-  // acara,
-  // fotografer,
-  // videografer,
-  // status,
-  // link,
-  // users_id,
 
   @override
   Widget build(BuildContext context) {

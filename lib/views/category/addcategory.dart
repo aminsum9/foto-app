@@ -1,14 +1,12 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/styles/colors.dart' as colors;
+import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 
 class AddCategory extends StatefulWidget {
   const AddCategory({super.key});
@@ -25,13 +23,8 @@ class AddCategoryState extends State<AddCategory> {
 
   File imageGambar = File("");
 
-  Future<String> getDataStorage(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(key).toString();
-  }
-
   void addDataCategory(BuildContext context) async {
-    var token = await getDataStorage('token');
+    var token = await handle_storage.getDataStorage('token');
 
     var url = Uri.parse("${host.BASE_URL}category/add");
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:foto_app/models/project_model.dart';
 import 'package:foto_app/views/home.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
@@ -65,11 +64,6 @@ class DetailProjectState extends State<DetailProject> {
       isUserLogin = token != '' && token != "null";
       isAdmin = roleUsers == 'Administrator';
     });
-  }
-
-  Future<String> getDataStorage(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(key).toString();
   }
 
   void deleteData(ProjectModel project) async {

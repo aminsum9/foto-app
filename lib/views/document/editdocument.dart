@@ -7,15 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foto_app/models/category_model.dart';
 import 'package:foto_app/models/document_model.dart';
-import 'package:foto_app/views/dashboard.dart';
-import 'package:foto_app/views/document/document.dart';
 import 'package:foto_app/views/home.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/styles/colors.dart' as colors;
 import 'package:foto_app/functions/handle_request.dart' as handle_request;
+import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 import 'package:dropdown_search/dropdown_search.dart';
 
 class EditDocument extends StatefulWidget {
@@ -189,13 +187,8 @@ class EditDocumentState extends State<EditDocument> {
     return File(imagePath);
   }
 
-  Future<String> getDataStorage(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(key).toString();
-  }
-
   void editDataDocument(BuildContext context) async {
-    var token = await getDataStorage('token');
+    var token = await handle_storage.getDataStorage('token');
 
     var url = Uri.parse("${host.BASE_URL}document/update");
 
