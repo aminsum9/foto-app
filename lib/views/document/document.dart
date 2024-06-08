@@ -20,6 +20,7 @@ class Document extends StatefulWidget {
 class DocumentState extends State<Document> {
   List<DocumentModel> data = [];
   bool? isUserLogin;
+  bool? isAdmin;
   int currentTotalData = 0;
   int page = 1;
   int paging = 10;
@@ -38,10 +39,12 @@ class DocumentState extends State<Document> {
   void getData() async {
     List<DocumentModel> dataTrans = await getDataDocument(1);
     String token = await handle_storage.getDataStorage('token');
+    String roleUsers = await handle_storage.getDataStorage('role_users');
 
     setState(() {
       data = dataTrans;
       isUserLogin = token != '' && token != "null";
+      isAdmin = roleUsers == 'Administrator';
     });
   }
 
@@ -128,7 +131,7 @@ class DocumentState extends State<Document> {
         canPop: false,
         child: SafeArea(
             child: Scaffold(
-                floatingActionButton: isUserLogin == true
+                floatingActionButton: isUserLogin == true && isAdmin == true
                     ? FloatingActionButton(
                         onPressed: () =>
                             Navigator.pushNamed(context, '/add_document'),

@@ -19,6 +19,7 @@ class Team extends StatefulWidget {
 class TeamState extends State<Team> {
   List<TeamModel> data = [];
   bool? isUserLogin;
+  bool? isAdmin;
   int currentTotalData = 0;
   int page = 1;
   int paging = 10;
@@ -37,10 +38,12 @@ class TeamState extends State<Team> {
   void getData() async {
     List<TeamModel> dataTrans = await getDataTeam(1);
     String token = await handle_storage.getDataStorage('token');
+    String roleUsers = await handle_storage.getDataStorage('role_users');
 
     setState(() {
       data = dataTrans;
       isUserLogin = token != '' && token != "null";
+      isAdmin = roleUsers == 'Administrator';
     });
   }
 
@@ -112,7 +115,7 @@ class TeamState extends State<Team> {
         canPop: true,
         child: SafeArea(
             child: Scaffold(
-                floatingActionButton: isUserLogin == true
+                floatingActionButton: isUserLogin == true && isAdmin == true
                     ? FloatingActionButton(
                         onPressed: () =>
                             Navigator.pushNamed(context, '/add_team'),
@@ -159,6 +162,8 @@ class TeamState extends State<Team> {
                                                 as String,
                                             teamCreatedAt:
                                                 data[index].createdAt as String,
+                                            isUserLogin: isUserLogin,
+                                            isAdmin: isAdmin,
                                             index: index);
                                       },
                                     ))
@@ -179,6 +184,8 @@ class ItemTeam extends StatelessWidget {
   String teamCreatedAt = '';
   TeamModel item;
   int index = 0;
+  bool? isUserLogin;
+  bool? isAdmin;
 
   ItemTeam(
       {super.key,
@@ -186,7 +193,13 @@ class ItemTeam extends StatelessWidget {
       required this.fotografer,
       required this.videografer,
       required this.teamCreatedAt,
+      required this.isUserLogin,
+      required this.isAdmin,
       required this.index});
+
+  Future<String> noResponse() async {
+    return '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -198,9 +211,11 @@ class ItemTeam extends StatelessWidget {
 
     return SizedBox(
       child: GestureDetector(
-        onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (BuildContext context) =>
-                DetailTeam(team: item, index: index))),
+        onTap: () => (isUserLogin == true && isAdmin == true)
+            ? Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    DetailTeam(team: item, index: index)))
+            : noResponse(),
         child: Card(
           child: ListTile(
             title: Column(

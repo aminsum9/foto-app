@@ -20,6 +20,7 @@ class Category extends StatefulWidget {
 class CategoryState extends State<Category> {
   List<CategoryModel> data = [];
   bool? isUserLogin;
+  bool? isAdmin;
   int currentTotalData = 0;
   int page = 1;
   int paging = 10;
@@ -38,10 +39,12 @@ class CategoryState extends State<Category> {
   void getData() async {
     List<CategoryModel> dataTrans = await getDataCategory(1);
     String token = await handle_storage.getDataStorage('token');
+    String roleUsers = await handle_storage.getDataStorage('role_users');
 
     setState(() {
       data = dataTrans;
       isUserLogin = token != '' && token != "null";
+      isAdmin = roleUsers == 'Administrator';
     });
   }
 
@@ -100,7 +103,7 @@ class CategoryState extends State<Category> {
         canPop: true,
         child: SafeArea(
             child: Scaffold(
-                floatingActionButton: isUserLogin == true
+                floatingActionButton: isUserLogin == true && isAdmin == true
                     ? FloatingActionButton(
                         onPressed: () =>
                             Navigator.pushNamed(context, '/add_category'),
@@ -130,7 +133,9 @@ class CategoryState extends State<Category> {
                                               data[index].kategori as String,
                                           createdAt:
                                               data[index].createdAt as String,
-                                          index: index);
+                                          index: index,
+                                          isUserLogin: isUserLogin,
+                                          isAdmin: isAdmin);
                                     },
                                   ))
                           : const Center(
@@ -147,6 +152,8 @@ class ItemCategory extends StatelessWidget {
   String kategori = '';
   String createdAt = '';
   CategoryModel item;
+  bool? isUserLogin;
+  bool? isAdmin;
   int index = 0;
 
   ItemCategory(
@@ -154,7 +161,13 @@ class ItemCategory extends StatelessWidget {
       required this.item,
       required this.kategori,
       required this.createdAt,
-      required this.index});
+      required this.index,
+      required this.isUserLogin,
+      required this.isAdmin});
+
+  Future<String> noResponse() async {
+    return '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -166,9 +179,11 @@ class ItemCategory extends StatelessWidget {
 
     return SizedBox(
       child: GestureDetector(
-        onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (BuildContext context) =>
-                DetailCategory(category: item, index: index))),
+        onTap: () => (isUserLogin == true && isAdmin == true)
+            ? Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    DetailCategory(category: item, index: index)))
+            : noResponse(),
         child: Card(
           child: ListTile(
             title: Row(

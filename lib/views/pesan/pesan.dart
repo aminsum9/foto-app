@@ -30,6 +30,7 @@ Future<http.Response> postData(Uri url, dynamic body) async {
 class PesanState extends State<Pesan> {
   List<PesanModel> data = [];
   bool? isUserLogin;
+  bool? isAdmin;
   int currentTotalData = 0;
   int page = 1;
   int paging = 10;
@@ -48,10 +49,12 @@ class PesanState extends State<Pesan> {
   void getData() async {
     List<PesanModel> dataTrans = await getDataPesan(1);
     String token = await handle_storage.getDataStorage('token');
+    String roleUsers = await handle_storage.getDataStorage('role_users');
 
     setState(() {
       data = dataTrans;
       isUserLogin = token != '' && token != "null";
+      isAdmin = roleUsers == 'Administrator';
     });
   }
 
@@ -108,10 +111,10 @@ class PesanState extends State<Pesan> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-        canPop: false,
+        canPop: true,
         child: SafeArea(
             child: Scaffold(
-                floatingActionButton: isUserLogin == true
+                floatingActionButton: isUserLogin == true && isAdmin == true
                     ? FloatingActionButton(
                         onPressed: () =>
                             Navigator.pushNamed(context, '/add_pesan'),

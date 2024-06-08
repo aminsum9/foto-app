@@ -20,6 +20,7 @@ class DetailPesan extends StatefulWidget {
 
 class DetailPesanState extends State<DetailPesan> {
   bool? isUserLogin;
+  bool? isAdmin;
 
   void confirmDelete() {
     showDialog<void>(
@@ -57,9 +58,11 @@ class DetailPesanState extends State<DetailPesan> {
 
   void getStorageToken() async {
     String token = await handle_storage.getDataStorage('token');
+    String roleUsers = await handle_storage.getDataStorage('role_users');
 
     setState(() {
       isUserLogin = token != '' && token != "null";
+      isAdmin = roleUsers == 'Administrator';
     });
   }
 
@@ -398,7 +401,7 @@ class DetailPesanState extends State<DetailPesan> {
                         padding: EdgeInsets.all(20.0),
                       ),
                       Visibility(
-                          visible: isUserLogin == true,
+                          visible: isUserLogin == true && isAdmin == true,
                           child: Row(children: [
                             TextButton(
                               onPressed: () => confirmDelete(),

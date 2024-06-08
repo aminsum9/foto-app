@@ -29,11 +29,13 @@ class SplashState extends State<Splash> with TickerProviderStateMixin {
               (response) async {
         if (response.statusCode == 200) {
           if (jsonDecode(response.body)['success'] == true) {
-            print("token: ${jsonDecode(response.body)['token'].toString()}");
+            // print("token: ${jsonDecode(response.body)['token'].toString()}");
             await handle_storage.saveDataStorage(
                 'token', jsonDecode(response.body)['token'].toString());
             await handle_storage.saveDataStorage(
                 'user', jsonEncode(jsonDecode(response.body)['data']));
+            await handle_storage.saveDataStorage('role_users',
+                jsonDecode(response.body)['data']['role_users'].toString());
 
             // ignore: use_build_context_synchronously
             Navigator.pushNamed(context, '/home');

@@ -18,20 +18,26 @@ class AccountState extends State<Account> {
   dynamic dataUser;
   String userName = '';
   String userEmail = '';
+  bool? isUserLogin;
+  bool? isAdmin;
 
   @override
   void initState() {
     super.initState();
-    getDataUser();
+    getData();
   }
 
-  void getDataUser() async {
+  void getData() async {
     String user = await handle_storage.getDataStorage('user');
+    String token = await handle_storage.getDataStorage('token');
+    String roleUsers = await handle_storage.getDataStorage('role_users');
 
     setState(() {
       dataUser = jsonDecode(user);
-      userName = dataUser != null ? jsonDecode(user)['nama'] : 'User';
+      userName = dataUser != null ? jsonDecode(user)['nama'] : 'Pengguna';
       userEmail = dataUser != null ? jsonDecode(user)['username'] : "";
+      isUserLogin = token != '' && token != "null";
+      isAdmin = roleUsers == 'Administrator';
     });
   }
 
@@ -80,10 +86,38 @@ class AccountState extends State<Account> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                userName,
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              Row(
+                                children: [
+                                  Text(
+                                    userName,
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Visibility(
+                                      visible: isUserLogin == true,
+                                      child: Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 5,
+                                            right: 5,
+                                            top: 2,
+                                            bottom: 2),
+                                        margin: const EdgeInsets.only(left: 10),
+                                        decoration: BoxDecoration(
+                                            color: Colors.blue,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                                color: Colors.blueAccent)),
+                                        child: Text(
+                                          isAdmin == true ? 'Admnin' : 'User',
+                                          style: const TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ))
+                                ],
                               ),
                               Text(
                                 userEmail,
@@ -94,11 +128,11 @@ class AccountState extends State<Account> {
                     ],
                   ),
                 ),
+                const Padding(padding: EdgeInsets.only(top: 15)),
                 Visibility(
-                    visible: dataUser != null,
+                    visible: isUserLogin == true && isAdmin == true,
                     child: Column(
                       children: [
-                        const Padding(padding: EdgeInsets.only(top: 15)),
                         ButtonList(
                             onClick: () =>
                                 Navigator.pushNamed(context, '/category'),
@@ -107,7 +141,7 @@ class AccountState extends State<Account> {
                       ],
                     )),
                 Visibility(
-                    visible: dataUser != null,
+                    visible: isUserLogin == true && isAdmin == true,
                     child: Column(
                       children: [
                         ButtonList(
@@ -118,7 +152,7 @@ class AccountState extends State<Account> {
                       ],
                     )),
                 Visibility(
-                    visible: dataUser != null,
+                    visible: isUserLogin == true,
                     child: Column(
                       children: [
                         ButtonList(
@@ -129,7 +163,7 @@ class AccountState extends State<Account> {
                       ],
                     )),
                 Visibility(
-                    visible: dataUser == null,
+                    visible: isUserLogin == false,
                     child: Column(
                       children: [
                         ButtonList(
@@ -139,7 +173,7 @@ class AccountState extends State<Account> {
                       ],
                     )),
                 Visibility(
-                    visible: dataUser != null,
+                    visible: isUserLogin == true,
                     child: ButtonList(
                         onClick: () => handleLogOut(), title: 'Keluar'))
               ],

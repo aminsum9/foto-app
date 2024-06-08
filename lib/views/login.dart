@@ -34,6 +34,8 @@ class LoginState extends State<Login> {
               'token', jsonDecode(response.body)['token'].toString());
           await handle_storage.saveDataStorage(
               'user', jsonEncode(jsonDecode(response.body)['data']));
+          await handle_storage.saveDataStorage('role_users',
+              jsonDecode(response.body)['data']['role_users'].toString());
 
           // ignore: use_build_context_synchronously
           Navigator.pushNamed(context, '/home');

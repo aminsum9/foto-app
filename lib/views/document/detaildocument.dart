@@ -22,6 +22,7 @@ class DetailDocumentState extends State<DetailDocument> {
   DocumentModel? documentData;
   List<Widget> fotoList = [];
   bool? isUserLogin;
+  bool? isAdmin;
 
   void confirmDelete() {
     showDialog<void>(
@@ -59,9 +60,11 @@ class DetailDocumentState extends State<DetailDocument> {
 
   void getStorageToken() async {
     String token = await handle_storage.getDataStorage('token');
+    String roleUsers = await handle_storage.getDataStorage('role_users');
 
     setState(() {
       isUserLogin = token != '' && token != "null";
+      isAdmin = roleUsers == 'Administrator';
     });
   }
 
@@ -377,7 +380,7 @@ class DetailDocumentState extends State<DetailDocument> {
                         padding: EdgeInsets.all(20.0),
                       ),
                       Visibility(
-                          visible: isUserLogin == true,
+                          visible: isUserLogin == true && isAdmin == true,
                           child: Row(
                             children: [
                               TextButton(

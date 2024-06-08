@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:foto_app/models/project_model.dart';
 import 'package:foto_app/views/project/detailproject.dart';
 import 'package:foto_app/widgets/regular_header.dart';
-import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
-import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:foto_app/functions/host.dart' as host;
+import 'package:foto_app/functions/handle_request.dart' as handle_request;
+import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
+import 'package:intl/intl.dart';
 
 class Project extends StatefulWidget {
   const Project({super.key});
@@ -17,19 +16,10 @@ class Project extends StatefulWidget {
   ProjectState createState() => ProjectState();
 }
 
-Future<String> getDataStorage(String key) async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString(key).toString();
-}
-
-Future<http.Response> postData(Uri url, dynamic body) async {
-  final response = await http.post(url, body: body);
-  return response;
-}
-
 class ProjectState extends State<Project> {
   List<ProjectModel> data = [];
   bool? isUserLogin;
+  bool? isAdmin;
   int currentTotalData = 0;
   int page = 1;
   int paging = 10;
@@ -48,17 +38,20 @@ class ProjectState extends State<Project> {
   void getData() async {
     List<ProjectModel> dataTrans = await getDataProject(1);
     String token = await handle_storage.getDataStorage('token');
+    String roleUsers = await handle_storage.getDataStorage('role_users');
 
     setState(() {
       data = dataTrans;
       isUserLogin = token != '' && token != "null";
+      isAdmin = roleUsers == 'Administrator';
     });
   }
 
   Future<List<ProjectModel>> getDataProject(int currentPage) async {
     var body = {"page": currentPage.toString(), "paging": paging.toString()};
 
-    final response = await postData(Uri.parse("${host.BASE_URL}project"), body);
+    final response = await handle_request.postData(
+        Uri.parse("${host.BASE_URL}project"), body);
 
     if (response.statusCode != 200) {
       return [];
@@ -111,7 +104,7 @@ class ProjectState extends State<Project> {
         canPop: false,
         child: SafeArea(
             child: Scaffold(
-                floatingActionButton: isUserLogin == true
+                floatingActionButton: isUserLogin == true && isAdmin == true
                     ? FloatingActionButton(
                         onPressed: () =>
                             Navigator.pushNamed(context, '/add_project'),
