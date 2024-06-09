@@ -65,9 +65,9 @@ class DetailPesanState extends State<DetailPesan> {
 
   void requestPermission() async {
     if (await Permission.manageExternalStorage.request().isGranted) {
-      print(' manage storage granted');
+      // print(' manage storage granted');
     } else {
-      print(' manage storage not granted');
+      // print(' manage storage not granted');
     }
   }
 
