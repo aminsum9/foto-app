@@ -50,6 +50,7 @@ dependencies:
   open_file: ^3.3.2
   external_path: ^1.0.3
   permission_handler: ^11.3.1
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:

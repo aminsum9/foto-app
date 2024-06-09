@@ -164,7 +164,9 @@ class AddProjectState extends State<AddProject> {
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text('Gambar:'),
                     imageGambarName != ""
                         ? (SizedBox(
                             width: 100,

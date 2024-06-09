@@ -471,7 +471,9 @@ class EditDocumentState extends State<EditDocument> {
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text('Foto:'),
                     imageFotoName != ""
                         ? (SizedBox(
                             width: 100,
@@ -520,7 +522,9 @@ class EditDocumentState extends State<EditDocument> {
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text('Foto 1:'),
                     imageFoto1Name != ""
                         ? (SizedBox(
                             width: 100,
@@ -568,7 +572,9 @@ class EditDocumentState extends State<EditDocument> {
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text('Foto 2:'),
                     imageFoto2Name != ""
                         ? (SizedBox(
                             width: 100,
@@ -615,7 +621,9 @@ class EditDocumentState extends State<EditDocument> {
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text('Foto 3:'),
                     imageFoto3Name != ""
                         ? (SizedBox(
                             width: 100,
@@ -664,7 +672,9 @@ class EditDocumentState extends State<EditDocument> {
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text('Foto 4:'),
                     imageFoto4Name != ""
                         ? (SizedBox(
                             width: 100,
@@ -712,7 +722,9 @@ class EditDocumentState extends State<EditDocument> {
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text('Foto 5:'),
                     imageFoto5Name != ""
                         ? (SizedBox(
                             width: 100,
@@ -761,7 +773,9 @@ class EditDocumentState extends State<EditDocument> {
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text('Foto 6:'),
                     imageFoto6Name != ""
                         ? (SizedBox(
                             width: 100,

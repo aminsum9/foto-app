@@ -190,10 +190,9 @@ class EditProjectState extends State<EditProject> {
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Visibility(
-                    //     visible: imageNetwork != "",
-                    //     child: ),
+                    const Text('Gambar:'),
                     imageGambarName != ""
                         ? (SizedBox(
                             width: 100,
