@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foto_app/functions/convert_time.dart';
@@ -21,6 +22,7 @@ class EditPesanState extends State<EditPesan> {
 
   FilePickerResult? fileSurat;
   String fileSuratName = '';
+  String selectedStatus = '';
 
   DateTime tanggalAwal = DateTime.now();
   TimeOfDay waktuAwal = TimeOfDay.now();
@@ -90,6 +92,7 @@ class EditPesanState extends State<EditPesan> {
       tanggalAkhir = tanggalAkhirData;
       waktuAkhir = waktuAkhirData;
       fileSuratName = pesan.file_surat as String;
+      selectedStatus = pesan.status.toString();
     });
   }
 
@@ -191,6 +194,7 @@ class EditPesanState extends State<EditPesan> {
     request.fields['fotografer'] = controllerFotografer.text.toString();
     request.fields['videografer'] = controllerVideografer.text.toString();
     // status
+    request.fields['status'] = selectedStatus;
     request.fields['link'] = controllerLink.text.toString();
     // request.fields['users_id'] = dataUser['id'].toString();
 
@@ -243,6 +247,12 @@ class EditPesanState extends State<EditPesan> {
           textColor: Colors.white,
           fontSize: 16.0);
     }
+  }
+
+  Future<List<String>> getDataStatus(filter) async {
+    List<String> listStatuses = ['Menunggu', 'Ditolak', 'Disetujui'];
+
+    return listStatuses;
   }
 
   @override
@@ -448,6 +458,30 @@ class EditPesanState extends State<EditPesan> {
                 ),
               ],
             ),
+            DropdownSearch(
+              asyncItems: (filter) => getDataStatus(filter),
+              dropdownDecoratorProps: const DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  labelText: "Status",
+                  hintText: "pilih status",
+                ),
+              ),
+              compareFn: (i, s) => i == s,
+              popupProps: PopupPropsMultiSelection.modalBottomSheet(
+                isFilterOnline: true,
+                showSelectedItems: true,
+                showSearchBox: true,
+                selectionWidget: ((context, item, isSelected) =>
+                    Text(item as String)),
+                itemBuilder: itemSearch,
+              ),
+              selectedItem: selectedStatus,
+              onChanged: (value) => {
+                setState(() {
+                  selectedStatus = value.toString();
+                })
+              },
+            ),
           ])),
       bottomNavigationBar: Container(
         margin: const EdgeInsets.only(left: 16, right: 16, bottom: 10),
@@ -467,4 +501,24 @@ class EditPesanState extends State<EditPesan> {
       ),
     );
   }
+}
+
+Widget itemSearch(
+  BuildContext context,
+  String item,
+  bool isSelected,
+) {
+  return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: !isSelected
+          ? null
+          : BoxDecoration(
+              border: Border.all(color: Theme.of(context).primaryColor),
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
+            ),
+      child: ListTile(
+        selected: isSelected,
+        title: Text(item ?? ''),
+      ));
 }

@@ -184,6 +184,17 @@ class ItemPesan extends StatelessWidget {
         : DateTime.parse(now.split('T')[0]);
     String pesanCreatedAt = DateFormat('dd MMMM yyy').format(date);
 
+    Color colorStatus = Colors.white;
+
+    if (item.status == 'Menunggu') {
+      colorStatus = Colors.blue;
+    } else if (item.status == 'Disetujui') {
+      colorStatus = Colors.green;
+    }
+    if (item.status == 'Ditolak') {
+      colorStatus = Colors.red;
+    }
+
     return SizedBox(
       child: GestureDetector(
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -197,6 +208,21 @@ class ItemPesan extends StatelessWidget {
                   nomor_surat,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
+                Container(
+                  padding: const EdgeInsets.only(
+                      left: 5, right: 5, top: 2, bottom: 2),
+                  margin: const EdgeInsets.only(left: 5),
+                  decoration: BoxDecoration(
+                      color: colorStatus,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    item.status ?? '',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 10),
+                  ),
+                )
               ],
             ),
             subtitle: Text('Dibuat tgl. : $pesanCreatedAt'),
