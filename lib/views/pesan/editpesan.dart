@@ -252,6 +252,13 @@ class EditPesanState extends State<EditPesan> {
   Future<List<String>> getDataStatus(filter) async {
     List<String> listStatuses = ['Menunggu', 'Ditolak', 'Disetujui'];
 
+    if (filter != '') {
+      var haveAnyValid = listStatuses
+          .where((i) => i.toLowerCase().contains(filter) || i.contains(filter));
+
+      return [...haveAnyValid];
+    }
+
     return listStatuses;
   }
 

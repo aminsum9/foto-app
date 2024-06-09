@@ -310,7 +310,7 @@ class EditDocumentState extends State<EditDocument> {
   }
 
   Future<List<String>> getDataKategori(filter) async {
-    var body = {};
+    var body = {"keyword": filter};
 
     final response = await handle_request.postData(
         Uri.parse("${host.BASE_URL}category"), body);

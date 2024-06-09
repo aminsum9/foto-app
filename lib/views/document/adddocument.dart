@@ -260,7 +260,7 @@ class AddDocumentState extends State<AddDocument> {
   }
 
   Future<List<String>> getDataKategori(filter) async {
-    var body = {"page": "1", "paging": "10"};
+    var body = {"keyword": filter};
 
     final response = await handle_request.postData(
         Uri.parse("${host.BASE_URL}category"), body);
