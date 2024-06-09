@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:foto_app/styles/colors.dart' as colors;
 
 // ignore: must_be_immutable
 class RegularHeader extends StatefulWidget {

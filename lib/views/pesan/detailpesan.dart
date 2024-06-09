@@ -452,23 +452,27 @@ class DetailPesanState extends State<DetailPesan> {
                                   ),
                                   const Padding(
                                       padding: EdgeInsets.only(top: 5)),
-                                  GestureDetector(
-                                    onTap: () => downloadFile(
-                                        widget.pesan.file_surat.toString()),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                          color: Colors.blue,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                              color: Colors.blueAccent)),
-                                      child: const Text(
-                                        'download file',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                  )
+                                  Visibility(
+                                      visible: isUserLogin == true &&
+                                          isAdmin == true,
+                                      child: GestureDetector(
+                                        onTap: () => downloadFile(
+                                            widget.pesan.file_surat.toString()),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                              color: Colors.blue,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: Colors.blueAccent)),
+                                          child: const Text(
+                                            'download file',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      ))
                                 ],
                               ),
                             ]),

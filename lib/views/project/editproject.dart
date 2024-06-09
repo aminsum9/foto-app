@@ -109,6 +109,7 @@ class EditProjectState extends State<EditProject> {
         // Navigator.of(context).pop();
         // Navigator.of(context).pop();
         Navigator.push(
+          // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(builder: (context) => const Home()),
         );

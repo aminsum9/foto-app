@@ -5,7 +5,7 @@ import 'package:foto_app/models/pesan_model.dart';
 import 'package:foto_app/views/pesan/detailpesan.dart';
 import 'package:foto_app/widgets/regular_header.dart';
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
-import 'package:http/http.dart' as http;
+import 'package:foto_app/functions/handle_request.dart' as handle_request;
 import 'package:intl/intl.dart';
 import 'package:foto_app/functions/host.dart' as host;
 
@@ -14,11 +14,6 @@ class Pesan extends StatefulWidget {
 
   @override
   PesanState createState() => PesanState();
-}
-
-Future<http.Response> postData(Uri url, dynamic body) async {
-  final response = await http.post(url, body: body);
-  return response;
 }
 
 class PesanState extends State<Pesan> {
@@ -55,7 +50,8 @@ class PesanState extends State<Pesan> {
   Future<List<PesanModel>> getDataPesan(int currentPage) async {
     var body = {"page": currentPage.toString(), "paging": paging.toString()};
 
-    final response = await postData(Uri.parse("${host.BASE_URL}pesan"), body);
+    final response =
+        await handle_request.postData(Uri.parse("${host.BASE_URL}pesan"), body);
 
     if (response.statusCode != 200) {
       return [];

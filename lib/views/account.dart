@@ -50,10 +50,12 @@ class AccountState extends State<Account> {
           // ignore: use_build_context_synchronously
           Navigator.pushNamed(context, '/splash');
         } else {
-          //
+          await handle_storage.deleteAllStorage();
+          Navigator.pushNamed(context, '/splash');
         }
       } else {
-        //
+        await handle_storage.deleteAllStorage();
+        Navigator.pushNamed(context, '/splash');
       }
     });
   }

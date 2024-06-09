@@ -294,7 +294,7 @@ class DashboardState extends State<Dashboard> {
                                 'Berikut adalah langkah-langkah untuk memesan fotografer dan videografer:'),
                             const Padding(padding: EdgeInsets.only(bottom: 10)),
                             Padding(
-                              padding: EdgeInsets.only(left: 20),
+                              padding: const EdgeInsets.only(left: 20),
                               child: Column(
                                 children: [
                                   Row(

@@ -60,7 +60,9 @@ class AddCategoryState extends State<AddCategory> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
       } else if (decodedMap['message'] != null) {
         Fluttertoast.showToast(
