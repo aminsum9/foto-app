@@ -86,13 +86,13 @@ class EditDocumentState extends State<EditDocument> {
       selectedCategoryId = document.kategori.toString();
       selectedCategory = document.kategoriData?.kategori ?? "";
       documentDate = documentDateData;
-      imageNetworkFoto = document.foto as String;
-      imageNetworkFoto1 = document.foto1 as String;
-      imageNetworkFoto2 = document.foto2 as String;
-      imageNetworkFoto3 = document.foto3 as String;
-      imageNetworkFoto4 = document.foto4 as String;
-      imageNetworkFoto5 = document.foto5 as String;
-      imageNetworkFoto6 = document.foto6 as String;
+      imageNetworkFoto = document.foto ?? '';
+      imageNetworkFoto1 = document.foto1 ?? '';
+      imageNetworkFoto2 = document.foto2 ?? '';
+      imageNetworkFoto3 = document.foto3 ?? '';
+      imageNetworkFoto4 = document.foto4 ?? '';
+      imageNetworkFoto5 = document.foto5 ?? '';
+      imageNetworkFoto6 = document.foto6 ?? '';
     });
   }
 
