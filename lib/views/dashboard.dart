@@ -1,11 +1,9 @@
 import 'package:bulleted_list/bulleted_list.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:foto_app/widgets/button_regular.dart';
 import 'package:flutter/material.dart';
-import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
-import 'package:foto_app/functions/handle_request.dart' as handle_request;
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:foto_app/styles/colors.dart' as colors;
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -19,13 +17,14 @@ class DashboardState extends State<Dashboard> {
   String userName = '';
   String accountType = '';
   int userBallance = 0;
-  late YoutubePlayerController _controller;
-  late TextEditingController _idController;
-  late TextEditingController _seekToController;
+  late YoutubePlayerController controllerVideo1;
+  // late YoutubePlayerController controllerVideo2;
+  late TextEditingController idController;
+  late TextEditingController seekToController;
 
-  late PlayerState _playerState;
-  late YoutubeMetaData _videoMetaData;
-  bool _isPlayerReady = false;
+  late PlayerState playerState;
+  late YoutubeMetaData videoMetaData;
+  bool isPlayerReady = false;
 
   final List<String> listMissions = [
     'Pelayanan presisi dengan cara memberikan informasi dengan cepat dan tepat serta akurat kepada instansi internal dan eksternal serta masyarakat.',
@@ -33,12 +32,10 @@ class DashboardState extends State<Dashboard> {
     'Sebagai cyber public relations posture yang memberikan pelayanan informasi data digital kepada internal Kepolisian dan masyarakat serta memberikan pelayanan dengan cepat dan tepat sehingga tercapai kepercayaan publik dalam manajemen media.'
   ];
 
-  final List<String> listWorkFlow = ['Pesan', 'Tindakan', 'Hasil'];
-
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController(
+    controllerVideo1 = YoutubePlayerController(
       initialVideoId: 'sa3hshEEMuo',
       flags: const YoutubePlayerFlags(
         mute: false,
@@ -50,44 +47,45 @@ class DashboardState extends State<Dashboard> {
         enableCaption: true,
       ),
     )..addListener(listener);
-    _idController = TextEditingController();
-    _seekToController = TextEditingController();
-    _videoMetaData = const YoutubeMetaData();
-    _playerState = PlayerState.unknown;
+
+    // controllerVideo2 = YoutubePlayerController(
+    //   initialVideoId: 'up68UAfH0d0',
+    //   flags: const YoutubePlayerFlags(
+    //     mute: false,
+    //     autoPlay: false,
+    //     disableDragSeek: false,
+    //     loop: false,
+    //     isLive: false,
+    //     forceHD: false,
+    //     enableCaption: true,
+    //   ),
+    // )..addListener(listener);
+
+    idController = TextEditingController();
+    seekToController = TextEditingController();
+    videoMetaData = const YoutubeMetaData();
+    playerState = PlayerState.unknown;
   }
 
   void listener() {
-    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
+    if (isPlayerReady && mounted && !controllerVideo1.value.isFullScreen) {
       setState(() {
-        _playerState = _controller.value.playerState;
-        _videoMetaData = _controller.metadata;
+        playerState = controllerVideo1.value.playerState;
+        videoMetaData = controllerVideo1.metadata;
       });
     }
   }
 
-  void upgradeAccountType() async {
-    Navigator.pushNamed(context, '/upgrade_premium');
+  int currentSlideIdx = 0;
+
+  dynamic onSliderPageChanged(int int, CarouselPageChangedReason) {
+    setState(() {
+      currentSlideIdx = int;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    Color accTypeColor = Colors.white;
-    String accTypeText = '';
-
-    if (accountType == 'reguler') {
-      accTypeColor = Colors.green;
-      accTypeText = 'Reguler';
-    } else if (accountType == 'premium') {
-      accTypeColor = Colors.blue;
-      accTypeText = 'Premium';
-    } else if (accountType == 'silver') {
-      accTypeColor = Colors.grey;
-      accTypeText = 'Silver';
-    } else if (accountType == 'gold') {
-      accTypeColor = Colors.orange;
-      accTypeText = 'Gold';
-    }
-
     double screenWidth = MediaQuery.of(context).size.width;
 
     return PopScope(
@@ -98,42 +96,7 @@ class DashboardState extends State<Dashboard> {
                 padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
                 child: ListView(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Bidhumas Polda DIY',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20),
-                            ),
-                            Text(
-                              'Informasi Dokumentasi Polda\nDaerah Istimewa Yogyakarta.',
-                              style: TextStyle(fontSize: 15),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.only(left: 15),
-                          decoration: BoxDecoration(
-                              color: accTypeColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Text(
-                            accTypeText,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        Image.asset(
-                          "assets/images/logo/humas.png",
-                          width: 40,
-                          height: 40,
-                        )
-                      ],
-                    ),
+                    const Header(),
                     const Padding(padding: EdgeInsets.only(bottom: 20)),
                     const Divider(
                       height: 1,
@@ -157,240 +120,135 @@ class DashboardState extends State<Dashboard> {
                           ),
                         ],
                       ),
-                      child: CarouselSlider(
-                          options: CarouselOptions(
-                              viewportFraction: 1.0,
-                              enlargeCenterPage: false,
-                              initialPage: 0,
-                              height: 200.0,
-                              enableInfiniteScroll: false,
-                              autoPlay: false),
-                          items: [
-                            Container(
-                              width: screenWidth,
-                              color: Colors.white,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Image.asset(
-                                'assets/images/hero/home.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Container(
-                              width: screenWidth,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: YoutubePlayer(
-                                controller: _controller,
-                                showVideoProgressIndicator: true,
-                                progressIndicatorColor: Colors.blueAccent,
-                                topActions: <Widget>[
-                                  const SizedBox(width: 8.0),
-                                  Expanded(
-                                    child: Text(
-                                      _controller.metadata.title,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18.0,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.settings,
-                                      color: Colors.white,
-                                      size: 25.0,
-                                    ),
-                                    onPressed: () {
-                                      print('Settings Tapped!');
-                                    },
-                                  ),
-                                ],
-                                onReady: () {},
-                                onEnded: (data) {},
-                              ),
-                            ),
-                          ]),
-                    ),
-                    const Padding(padding: EdgeInsets.only(bottom: 20)),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: const Offset(
-                                0, 3), // changes position of shadow
-                          ),
-                        ],
-                      ),
                       child: Column(
                         children: [
-                          const Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Visi',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              Padding(padding: EdgeInsets.only(bottom: 10)),
-                              Text(
-                                  'Terwujudnya komunikasi publik bidang Humas yang prediktif, Responsibilitas, transparansi dan berkeadilan yang mantap menuju masyarakat yang aman dan tertib.')
-                            ],
-                          ),
+                          CarouselSlider(
+                              options: CarouselOptions(
+                                viewportFraction: 1.0,
+                                enlargeCenterPage: false,
+                                initialPage: 0,
+                                height: 200.0,
+                                enableInfiniteScroll: false,
+                                autoPlay: false,
+                                onPageChanged: onSliderPageChanged,
+                              ),
+                              items: [
+                                Container(
+                                  width: screenWidth,
+                                  color: Colors.white,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: Image.asset(
+                                    'assets/images/hero/home.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Container(
+                                  width: screenWidth,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: YoutubePlayer(
+                                    controller: controllerVideo1,
+                                    showVideoProgressIndicator: true,
+                                    progressIndicatorColor: Colors.blueAccent,
+                                    topActions: <Widget>[
+                                      const SizedBox(width: 8.0),
+                                      Expanded(
+                                        child: Text(
+                                          controllerVideo1.metadata.title,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18.0,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.settings,
+                                          color: Colors.white,
+                                          size: 25.0,
+                                        ),
+                                        onPressed: () {},
+                                      ),
+                                    ],
+                                    onReady: () {},
+                                    onEnded: (data) {},
+                                  ),
+                                ),
+                              ]),
                           const Padding(padding: EdgeInsets.only(bottom: 10)),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
-                                'Misi',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              const Padding(
-                                  padding: EdgeInsets.only(bottom: 5)),
-                              BulletedList(
-                                listItems: listMissions,
-                                listOrder: ListOrder.ordered,
-                              ),
+                              Dot(isSelected: currentSlideIdx == 0),
+                              const Padding(padding: EdgeInsets.only(left: 5)),
+                              Dot(isSelected: currentSlideIdx == 1)
                             ],
-                          ),
+                          )
                         ],
                       ),
                     ),
                     const Padding(padding: EdgeInsets.only(bottom: 20)),
-                    Container(
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: const Offset(
-                                  0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Bagaimana Alur Kerja?',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            const Text(
-                                'Berikut adalah langkah-langkah untuk memesan fotografer dan videografer:'),
-                            const Padding(padding: EdgeInsets.only(bottom: 10)),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/icon/message.svg',
-                                        height: 30,
-                                        width: 30,
-                                      ),
-                                      const Padding(
-                                          padding: EdgeInsets.only(left: 10)),
-                                      const Text('1. Pesan')
-                                    ],
-                                  ),
-                                  const Padding(
-                                      padding: EdgeInsets.only(bottom: 10)),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/icon/bug.svg',
-                                        height: 30,
-                                        width: 30,
-                                      ),
-                                      const Padding(
-                                          padding: EdgeInsets.only(left: 10)),
-                                      const Text('2. Tindakan')
-                                    ],
-                                  ),
-                                  const Padding(
-                                      padding: EdgeInsets.only(bottom: 10)),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/icon/downlode.svg',
-                                        height: 30,
-                                        width: 30,
-                                      ),
-                                      const Padding(
-                                          padding: EdgeInsets.only(left: 10)),
-                                      const Text('3. Hasil')
-                                    ],
-                                  ),
-                                  const Padding(
-                                      padding: EdgeInsets.only(bottom: 10)),
-                                ],
-                              ),
-                            )
-                          ],
-                        )),
+                    VisionAndMission(listMissions: listMissions),
                     const Padding(padding: EdgeInsets.only(bottom: 20)),
-                    Container(
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: const Offset(
-                                  0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Image.asset(
-                              'assets/images/gallery/DHE08577.jpg',
-                              fit: BoxFit.cover,
-                              width: screenWidth,
-                              height: 200,
-                            ),
-                            const Padding(padding: EdgeInsets.only(bottom: 10)),
-                            const Text(
-                              'Paket Project',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            const Text(
-                                'Pilih paket yang sesuai dengan kebutuhan Anda untuk mendapatkan layanan Fotografi dan Videografi yang tepat.'),
-                            const Padding(padding: EdgeInsets.only(bottom: 10)),
-                            const Text(
-                                'Dalam menawarkan layanan kami, kami memiliki tiga paket yang dapat Anda pilih, masing-masing dengan jumlah fotografer dan videografer yang berbeda.'),
-                            const Padding(padding: EdgeInsets.only(bottom: 10)),
-                          ],
-                        )),
+                    const WorkFlow(),
+                    // const Padding(padding: EdgeInsets.only(bottom: 20)),
+                    // Container(
+                    //   padding: const EdgeInsets.all(10),
+                    //   margin: const EdgeInsets.symmetric(horizontal: 10),
+                    //   width: screenWidth,
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.white,
+                    //     borderRadius:
+                    //         const BorderRadius.all(Radius.circular(10)),
+                    //     boxShadow: [
+                    //       BoxShadow(
+                    //         color: Colors.grey.withOpacity(0.5),
+                    //         spreadRadius: 5,
+                    //         blurRadius: 7,
+                    //         offset: const Offset(
+                    //             0, 3), // changes position of shadow
+                    //       ),
+                    //     ],
+                    //   ),
+                    //   child: Container(
+                    //     width: screenWidth,
+                    //     padding: const EdgeInsets.symmetric(horizontal: 20),
+                    //     child: YoutubePlayer(
+                    //       controller: controllerVideo2,
+                    //       showVideoProgressIndicator: true,
+                    //       progressIndicatorColor: Colors.blueAccent,
+                    //       topActions: <Widget>[
+                    //         const SizedBox(width: 8.0),
+                    //         Expanded(
+                    //           child: Text(
+                    //             controllerVideo1.metadata.title,
+                    //             style: const TextStyle(
+                    //               color: Colors.white,
+                    //               fontSize: 18.0,
+                    //             ),
+                    //             overflow: TextOverflow.ellipsis,
+                    //             maxLines: 1,
+                    //           ),
+                    //         ),
+                    //         IconButton(
+                    //           icon: const Icon(
+                    //             Icons.settings,
+                    //             color: Colors.white,
+                    //             size: 25.0,
+                    //           ),
+                    //           onPressed: () {},
+                    //         ),
+                    //       ],
+                    //       onReady: () {},
+                    //       onEnded: (data) {},
+                    //     ),
+                    //   ),
+                    // ),
+                    const Padding(padding: EdgeInsets.only(bottom: 20)),
+                    PackageProject(screenWidth: screenWidth),
                     const Padding(padding: EdgeInsets.only(bottom: 20)),
                   ],
                 )),
@@ -399,35 +257,273 @@ class DashboardState extends State<Dashboard> {
   }
 }
 
-class ButtonUpgradeAccType extends StatefulWidget {
+class Header extends StatefulWidget {
   @override
-  ButtonUpgradeAccTypeState createState() => ButtonUpgradeAccTypeState();
-  final String title;
-  final Function() onClick;
+  HeaderState createState() => HeaderState();
 
   @override
-  const ButtonUpgradeAccType(
-      {super.key, required this.onClick, required this.title});
+  const Header({super.key});
 }
 
-class ButtonUpgradeAccTypeState extends State<ButtonUpgradeAccType> {
+class HeaderState extends State<Header> {
   // ignore: empty_constructor_bodies
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => widget.onClick(),
-      child: Container(
-        margin: const EdgeInsets.only(left: 10),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: Colors.black, borderRadius: BorderRadius.circular(10)),
-        child: Align(
-          child: Text(
-            widget.title,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white, fontSize: 10),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Bidhumas Polda DIY',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            Text(
+              'Informasi Dokumentasi Polda\nDaerah Istimewa Yogyakarta.',
+              style: TextStyle(fontSize: 15),
+            ),
+          ],
+        ),
+        Container(
+          padding: const EdgeInsets.all(10),
+          margin: const EdgeInsets.only(left: 15),
+          child: const Text(
+            "",
+            style: TextStyle(color: Colors.white),
           ),
         ),
+        Image.asset(
+          "assets/images/logo/humas.png",
+          width: 40,
+          height: 40,
+        )
+      ],
+    );
+  }
+}
+
+class WorkFlow extends StatefulWidget {
+  @override
+  WorkFlowState createState() => WorkFlowState();
+
+  @override
+  const WorkFlow({super.key});
+}
+
+class WorkFlowState extends State<WorkFlow> {
+  // ignore: empty_constructor_bodies
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Bagaimana Alur Kerja?',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const Text(
+                'Berikut adalah langkah-langkah untuk memesan fotografer dan videografer:'),
+            const Padding(padding: EdgeInsets.only(bottom: 10)),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/images/icon/message.svg',
+                        height: 30,
+                        width: 30,
+                      ),
+                      const Padding(padding: EdgeInsets.only(left: 10)),
+                      const Text('1. Pesan')
+                    ],
+                  ),
+                  const Padding(padding: EdgeInsets.only(bottom: 10)),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/images/icon/bug.svg',
+                        height: 30,
+                        width: 30,
+                      ),
+                      const Padding(padding: EdgeInsets.only(left: 10)),
+                      const Text('2. Tindakan')
+                    ],
+                  ),
+                  const Padding(padding: EdgeInsets.only(bottom: 10)),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/images/icon/downlode.svg',
+                        height: 30,
+                        width: 30,
+                      ),
+                      const Padding(padding: EdgeInsets.only(left: 10)),
+                      const Text('3. Hasil')
+                    ],
+                  ),
+                  const Padding(padding: EdgeInsets.only(bottom: 10)),
+                ],
+              ),
+            )
+          ],
+        ));
+  }
+}
+
+class VisionAndMission extends StatefulWidget {
+  @override
+  VisionAndMissionState createState() => VisionAndMissionState();
+  final List<String> listMissions;
+
+  @override
+  const VisionAndMission({super.key, required this.listMissions});
+}
+
+class VisionAndMissionState extends State<VisionAndMission> {
+  // ignore: empty_constructor_bodies
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Visi', style: TextStyle(fontWeight: FontWeight.bold)),
+              Padding(padding: EdgeInsets.only(bottom: 10)),
+              Text(
+                  'Terwujudnya komunikasi publik bidang Humas yang prediktif, Responsibilitas, transparansi dan berkeadilan yang mantap menuju masyarakat yang aman dan tertib.')
+            ],
+          ),
+          const Padding(padding: EdgeInsets.only(bottom: 10)),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Misi',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 5)),
+              BulletedList(
+                listItems: widget.listMissions,
+                listOrder: ListOrder.ordered,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PackageProject extends StatefulWidget {
+  @override
+  PackageProjectState createState() => PackageProjectState();
+  final double screenWidth;
+
+  @override
+  const PackageProject({super.key, required this.screenWidth});
+}
+
+class PackageProjectState extends State<PackageProject> {
+  // ignore: empty_constructor_bodies
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.asset(
+              'assets/images/gallery/DHE08577.jpg',
+              fit: BoxFit.cover,
+              width: widget.screenWidth,
+              height: 200,
+            ),
+            const Padding(padding: EdgeInsets.only(bottom: 10)),
+            const Text(
+              'Paket Project',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const Text(
+                'Pilih paket yang sesuai dengan kebutuhan Anda untuk mendapatkan layanan Fotografi dan Videografi yang tepat.'),
+            const Padding(padding: EdgeInsets.only(bottom: 10)),
+            const Text(
+                'Dalam menawarkan layanan kami, kami memiliki tiga paket yang dapat Anda pilih, masing-masing dengan jumlah fotografer dan videografer yang berbeda.'),
+            const Padding(padding: EdgeInsets.only(bottom: 10)),
+          ],
+        ));
+  }
+}
+
+// ignore: must_be_immutable
+class Dot extends StatefulWidget {
+  @override
+  DotState createState() => DotState();
+  bool? isSelected;
+
+  @override
+  Dot({super.key, this.isSelected});
+}
+
+class DotState extends State<Dot> {
+  // ignore: empty_constructor_bodies
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: widget.isSelected == true ? colors.primary : Colors.grey,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
     );
   }
