@@ -51,10 +51,12 @@ class AccountState extends State<Account> {
           Navigator.pushNamed(context, '/splash');
         } else {
           await handle_storage.deleteAllStorage();
+          // ignore: use_build_context_synchronously
           Navigator.pushNamed(context, '/splash');
         }
       } else {
         await handle_storage.deleteAllStorage();
+        // ignore: use_build_context_synchronously
         Navigator.pushNamed(context, '/splash');
       }
     });
@@ -165,6 +167,15 @@ class AccountState extends State<Account> {
                         const Divider()
                       ],
                     )),
+                Column(
+                  children: [
+                    ButtonList(
+                        onClick: () =>
+                            Navigator.pushNamed(context, '/contact_us'),
+                        title: 'Hubungi Kami'),
+                    const Divider()
+                  ],
+                ),
                 Visibility(
                     visible: isUserLogin == false,
                     child: Column(

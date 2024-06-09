@@ -179,10 +179,10 @@ class EditPesanState extends State<EditPesan> {
     request.fields['nama'] = controllerNamaSurat.text;
     request.fields['nama_project'] = controllerNamaProject.text;
 
-    request.fields['tanggal_awal'] = tanggalAwal.toString().split('.')[0];
+    request.fields['tanggal_awal'] = tanggalAwal.toString().split(' ')[0];
     request.fields['waktu_awal'] =
         "${waktuAwal.hour.toString()}:${waktuAwal.minute.toString()}:00";
-    request.fields['tanggal_akhir'] = tanggalAkhir.toString().split('.')[0];
+    request.fields['tanggal_akhir'] = tanggalAkhir.toString().split(' ')[0];
     request.fields['waktu_akhir'] =
         "${waktuAkhir.hour.toString()}:${waktuAkhir.minute.toString()}:00";
 

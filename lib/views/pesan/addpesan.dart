@@ -81,12 +81,12 @@ class AddPesanState extends State<AddPesan> {
     request.fields['nama_project'] = controllerNamaProject.text;
 
     // tanggal_awal,
-    request.fields['tanggal_awal'] = tanggalAwal.toString().split('.')[0];
+    request.fields['tanggal_awal'] = tanggalAwal.toString().split(' ')[0];
     // waktu_awal,
     request.fields['waktu_awal'] =
         "${waktuAwal.hour.toString()}:${waktuAwal.minute.toString()}:00";
     // tanggal_akhir,
-    request.fields['tanggal_akhir'] = tanggalAkhir.toString().split('.')[0];
+    request.fields['tanggal_akhir'] = tanggalAkhir.toString().split(' ')[0];
     // waktu_akhir,
     request.fields['waktu_akhir'] =
         "${waktuAkhir.hour.toString()}:${waktuAkhir.minute.toString()}:00";
