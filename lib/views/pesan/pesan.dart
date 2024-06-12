@@ -185,7 +185,7 @@ class PesanState extends State<Pesan> {
               child: !loading
                   ? data.isEmpty
                       ? const Center(
-                          child: Text('Belum ada data Pesan!'),
+                          child: Text('Belum ada data Pesanan!'),
                         )
                       : ListView.builder(
                           padding: const EdgeInsets.all(8),
