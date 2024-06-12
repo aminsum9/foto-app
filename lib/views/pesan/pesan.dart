@@ -48,41 +48,90 @@ class PesanState extends State<Pesan> {
   }
 
   Future<List<PesanModel>> getDataPesan(int currentPage) async {
-    var body = {"page": currentPage.toString(), "paging": paging.toString()};
+    String user = await handle_storage.getDataStorage('user');
+    String roleUsers = await handle_storage.getDataStorage('role_users');
 
-    final response =
-        await handle_request.postData(Uri.parse("${host.BASE_URL}pesan"), body);
+    if (roleUsers == 'Administrator') {
+      var body = {
+        "page": currentPage.toString(),
+        "paging": paging.toString(),
+      };
 
-    if (response.statusCode != 200) {
-      return [];
-    }
+      final response = await handle_request.postData(
+          Uri.parse("${host.BASE_URL}pesan"), body);
 
-    var ressponseData = await jsonDecode(response.body);
-
-    List<PesanModel> ressData = [];
-
-    if (ressponseData['success'] == true) {
-      for (var i = 0; i < ressponseData['data']['data'].length; i++) {
-        dynamic itemPesan = ressponseData['data']['data'][i];
-
-        ressData.add(PesanModel.fromJson(itemPesan));
+      if (response.statusCode != 200) {
+        return [];
       }
 
-      int dataTotal = ressponseData['data']['total'];
+      var ressponseData = await jsonDecode(response.body);
 
-      setState(() {
-        data = [...data, ...ressData];
-        currentTotalData = currentTotalData + ressData.length;
-        totalData = dataTotal;
-        loading = false;
-      });
+      List<PesanModel> ressData = [];
 
-      return ressData;
+      if (ressponseData['success'] == true) {
+        for (var i = 0; i < ressponseData['data']['data'].length; i++) {
+          dynamic itemPesan = ressponseData['data']['data'][i];
+
+          ressData.add(PesanModel.fromJson(itemPesan));
+        }
+
+        int dataTotal = ressponseData['data']['total'];
+
+        setState(() {
+          data = [...data, ...ressData];
+          currentTotalData = currentTotalData + ressData.length;
+          totalData = dataTotal;
+          loading = false;
+        });
+
+        return ressData;
+      } else {
+        setState(() {
+          loading = false;
+        });
+        return ressData;
+      }
     } else {
-      setState(() {
-        loading = false;
-      });
-      return ressData;
+      var body = {
+        "page": currentPage.toString(),
+        "paging": paging.toString(),
+        "user_id": jsonDecode(user)['id'].toString()
+      };
+
+      final response = await handle_request.postData(
+          Uri.parse("${host.BASE_URL}pesan"), body);
+
+      if (response.statusCode != 200) {
+        return [];
+      }
+
+      var ressponseData = await jsonDecode(response.body);
+
+      List<PesanModel> ressData = [];
+
+      if (ressponseData['success'] == true) {
+        for (var i = 0; i < ressponseData['data']['data'].length; i++) {
+          dynamic itemPesan = ressponseData['data']['data'][i];
+
+          ressData.add(PesanModel.fromJson(itemPesan));
+        }
+
+        int dataTotal = ressponseData['data']['total'];
+
+        setState(() {
+          data = [...data, ...ressData];
+          currentTotalData = currentTotalData + ressData.length;
+          totalData = dataTotal;
+          loading = false;
+        });
+
+        return ressData;
+      } else {
+        setState(() {
+          loading = false;
+        });
+        return ressData;
+      }
     }
   }
 
@@ -103,62 +152,60 @@ class PesanState extends State<Pesan> {
     return Scaffold(
         body: SafeArea(
             child: Scaffold(
-                floatingActionButton: isUserLogin == true && isAdmin == true
-                    ? FloatingActionButton(
-                        onPressed: () =>
-                            Navigator.pushNamed(context, '/add_pesan'),
-                        backgroundColor: Colors.white,
-                        child: const Icon(Icons.add),
-                      )
-                    : null,
+                // floatingActionButton: isUserLogin == true && isAdmin == true
+                //     ? FloatingActionButton(
+                //         onPressed: () =>
+                //             Navigator.pushNamed(context, '/add_pesan'),
+                //         backgroundColor: Colors.white,
+                //         child: const Icon(Icons.add),
+                //       )
+                //     : null,
                 body: Column(
-                  children: [
-                    RegularHeader(title: 'Pesan'),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height - 200,
-                      child: NotificationListener<ScrollEndNotification>(
-                        onNotification: (scrollEnd) {
-                          final metrics = scrollEnd.metrics;
-                          if (metrics.atEdge) {
-                            bool isTop = metrics.pixels == 0;
-                            if (isTop) {
-                              //
-                            } else {
-                              if (currentTotalData < totalData) {
-                                _loadMoreData();
-                              }
-                            }
-                          }
-                          return true;
-                        },
-                        child: RefreshIndicator(
-                          onRefresh: () => _handleRefresh(),
-                          child: !loading
-                              ? data.isEmpty
-                                  ? const Center(
-                                      child: Text('Belum ada data Pesan!'),
-                                    )
-                                  : ListView.builder(
-                                      padding: const EdgeInsets.all(8),
-                                      itemCount: data.length,
-                                      itemBuilder: (context, index) {
-                                        return ItemPesan(
-                                            item: data[index],
-                                            nomor_surat: data[index].nomor_surat
-                                                as String,
-                                            createdAt:
-                                                data[index].createdAt as String,
-                                            index: index);
-                                      },
-                                    )
-                              : const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                        ),
-                      ),
-                    )
-                  ],
-                ))));
+      children: [
+        RegularHeader(title: 'Pesan'),
+        SizedBox(
+          height: MediaQuery.of(context).size.height - 200,
+          child: NotificationListener<ScrollEndNotification>(
+            onNotification: (scrollEnd) {
+              final metrics = scrollEnd.metrics;
+              if (metrics.atEdge) {
+                bool isTop = metrics.pixels == 0;
+                if (isTop) {
+                  //
+                } else {
+                  if (currentTotalData < totalData) {
+                    _loadMoreData();
+                  }
+                }
+              }
+              return true;
+            },
+            child: RefreshIndicator(
+              onRefresh: () => _handleRefresh(),
+              child: !loading
+                  ? data.isEmpty
+                      ? const Center(
+                          child: Text('Belum ada data Pesan!'),
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.all(8),
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            return ItemPesan(
+                                item: data[index],
+                                nomor_surat: data[index].nomor_surat as String,
+                                createdAt: data[index].createdAt as String,
+                                index: index);
+                          },
+                        )
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+            ),
+          ),
+        )
+      ],
+    ))));
   }
 }
 

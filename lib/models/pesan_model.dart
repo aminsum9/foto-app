@@ -16,6 +16,7 @@ class PesanModel {
   final String? status;
   final String? link;
   final String? users_id;
+  final String? order_by;
   final String? createdAt;
   final String? updatedAt;
 
@@ -37,6 +38,7 @@ class PesanModel {
       this.status,
       this.link,
       this.users_id,
+      this.order_by,
       this.createdAt,
       this.updatedAt});
 
@@ -58,7 +60,11 @@ class PesanModel {
       videografer: json['videografer'] as String?,
       status: json['status'] as String?,
       link: json['link'] as String?,
-      users_id: json["iuser_idd"].toString() as String?,
+      users_id: json["users_id"].toString() as String?,
+      order_by:
+          json["order_by"] != null && json["order_by"].toString() != 'undefined'
+              ? json["order_by"]['nama'].toString() as String?
+              : '',
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
     );

@@ -163,7 +163,7 @@ class AccountState extends State<Account> {
                         ButtonList(
                             onClick: () =>
                                 Navigator.pushNamed(context, '/pesan'),
-                            title: 'Pesan'),
+                            title: 'Pesanan Projek'),
                         const Divider()
                       ],
                     )),

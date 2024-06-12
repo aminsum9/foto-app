@@ -436,6 +436,20 @@ class DetailPesanState extends State<DetailPesan> {
                                   ),
                                 ],
                               ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Pemesan : ",
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    "${widget.pesan.order_by}",
+                                    style: const TextStyle(fontSize: 17.0),
+                                  ),
+                                ],
+                              ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -453,8 +467,7 @@ class DetailPesanState extends State<DetailPesan> {
                                   const Padding(
                                       padding: EdgeInsets.only(top: 5)),
                                   Visibility(
-                                      visible: isUserLogin == true &&
-                                          isAdmin == true,
+                                      visible: isUserLogin == true,
                                       child: GestureDetector(
                                         onTap: () => downloadFile(
                                             widget.pesan.file_surat.toString()),

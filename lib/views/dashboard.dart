@@ -2,8 +2,10 @@ import 'package:bulleted_list/bulleted_list.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
+import 'package:foto_app/widgets/button_regular.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:foto_app/styles/colors.dart' as colors;
+import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -17,6 +19,9 @@ class DashboardState extends State<Dashboard> {
   String userName = '';
   String accountType = '';
   int userBallance = 0;
+  bool? isUserLogin;
+  bool? isAdmin;
+
   late YoutubePlayerController controllerVideo1;
   // late YoutubePlayerController controllerVideo2;
   late TextEditingController idController;
@@ -65,6 +70,18 @@ class DashboardState extends State<Dashboard> {
     seekToController = TextEditingController();
     videoMetaData = const YoutubeMetaData();
     playerState = PlayerState.unknown;
+
+    getStorageData();
+  }
+
+  void getStorageData() async {
+    String token = await handle_storage.getDataStorage('token');
+    String roleUsers = await handle_storage.getDataStorage('role_users');
+
+    setState(() {
+      isUserLogin = token != '' && token != "null";
+      isAdmin = roleUsers == 'Administrator';
+    });
   }
 
   void listener() {
@@ -190,6 +207,35 @@ class DashboardState extends State<Dashboard> {
                         ],
                       ),
                     ),
+                    Visibility(
+                        visible: isUserLogin == true && isAdmin != true,
+                        child: Column(
+                          children: [
+                            const Padding(padding: EdgeInsets.only(top: 20)),
+                            Container(
+                                padding: const EdgeInsets.all(10),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: const Offset(
+                                          0, 3), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: ButtonRegular(
+                                    onClick: () => Navigator.pushNamed(
+                                        context, '/add_pesan'),
+                                    title: 'Pesan Projek'))
+                          ],
+                        )),
                     const Padding(padding: EdgeInsets.only(bottom: 20)),
                     VisionAndMission(listMissions: listMissions),
                     const Padding(padding: EdgeInsets.only(bottom: 20)),

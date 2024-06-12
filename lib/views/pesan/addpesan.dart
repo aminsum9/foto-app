@@ -125,7 +125,7 @@ class AddPesanState extends State<AddPesan> {
             textColor: Colors.white,
             fontSize: 16.0);
         // ignore: use_build_context_synchronously
-        Navigator.of(context).pop();
+        // Navigator.of(context).pop();
         // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
       } else if (decodedMap['message'] != null) {
@@ -224,7 +224,7 @@ class AddPesanState extends State<AddPesan> {
     return Scaffold(
       appBar: AppBar(
         title:
-            const Text("Tambah Pesan", style: TextStyle(color: Colors.black)),
+            const Text("Pesan Projek", style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         shadowColor: Colors.transparent,
         leading: IconButton(
@@ -425,7 +425,7 @@ class AddPesanState extends State<AddPesan> {
               backgroundColor: colors.primary,
               padding: const EdgeInsets.all(15)),
           child:
-              const Text("Tambah Pesan", style: TextStyle(color: Colors.white)),
+              const Text("Pesan Projek", style: TextStyle(color: Colors.white)),
         ),
       ),
     );
