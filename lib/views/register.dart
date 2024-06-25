@@ -19,7 +19,7 @@ class Register extends StatefulWidget {
 }
 
 class RegisterState extends State<Register> {
-  final satuanKerja = TextEditingController(text: "BHAYANGKARA");
+  final satuanKerja = TextEditingController(text: "");
   final name = TextEditingController();
   final username = TextEditingController();
   final address = TextEditingController();

@@ -22,6 +22,8 @@ class AddDocument extends StatefulWidget {
 }
 
 class AddDocumentState extends State<AddDocument> {
+  dynamic dataUser;
+
   TextEditingController controllerPembuat = TextEditingController(text: "");
   TextEditingController controllerJudul = TextEditingController(text: "");
   TextEditingController controllerLink = TextEditingController(text: "");
@@ -46,6 +48,20 @@ class AddDocumentState extends State<AddDocument> {
   File imageFoto4 = File("");
   File imageFoto5 = File("");
   File imageFoto6 = File("");
+
+  @override
+  void initState() {
+    super.initState();
+    getDataUser();
+  }
+
+  void getDataUser() async {
+    String user = await handle_storage.getDataStorage('user');
+
+    setState(() {
+      dataUser = jsonDecode(user);
+    });
+  }
 
   Future<File> _pickImageFoto() async {
     final picker = ImagePicker();
@@ -165,7 +181,8 @@ class AddDocumentState extends State<AddDocument> {
     request.headers["Authorization"] = 'Bearer $token';
     request.headers["Content-Type"] = 'multipart/form-data';
 
-    request.fields['pembuat'] = controllerPembuat.text;
+    request.fields['pembuat'] = dataUser['nama'].toString();
+    // request.fields['pembuat'] = controllerPembuat.text;
     request.fields['tanggal'] = documentDate.toString().split('.')[0];
     request.fields['judul'] = controllerJudul.text.toString();
     request.fields['ringkasan'] = controllerSummary.text.toString();
@@ -249,7 +266,7 @@ class AddDocumentState extends State<AddDocument> {
       }
     } else {
       Fluttertoast.showToast(
-          msg: "Gagal menambah dokumen!",
+          msg: "Terjadi kesalahan, Gagal menambah dokumen!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.TOP,
           timeInSecForIosWeb: 1,
@@ -334,17 +351,17 @@ class AddDocumentState extends State<AddDocument> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextField(
-                  controller: controllerPembuat,
-                  decoration: InputDecoration(
-                      hintText: "masukkan nama pembuat",
-                      labelText: "Pembuat",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0))),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(10.0),
-                ),
+                // TextField(
+                //   controller: controllerPembuat,
+                //   decoration: InputDecoration(
+                //       hintText: "masukkan nama pembuat",
+                //       labelText: "Pembuat",
+                //       border: OutlineInputBorder(
+                //           borderRadius: BorderRadius.circular(20.0))),
+                // ),
+                // const Padding(
+                //   padding: EdgeInsets.all(10.0),
+                // ),
                 TextField(
                   controller: controllerJudul,
                   decoration: InputDecoration(
@@ -357,10 +374,10 @@ class AddDocumentState extends State<AddDocument> {
                   padding: EdgeInsets.all(10.0),
                 ),
                 TextField(
-                  controller: controllerLink,
+                  controller: controllerSummary,
                   decoration: InputDecoration(
-                      hintText: "masukkan link",
-                      labelText: "Link",
+                      hintText: "masukkan deskripsi",
+                      labelText: "Deskripsi",
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0))),
                 ),
@@ -368,10 +385,10 @@ class AddDocumentState extends State<AddDocument> {
                   padding: EdgeInsets.all(10.0),
                 ),
                 TextField(
-                  controller: controllerSummary,
+                  controller: controllerLink,
                   decoration: InputDecoration(
-                      hintText: "masukkan ringkasan",
-                      labelText: "Ringkasan",
+                      hintText: "masukkan link",
+                      labelText: "Link",
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0))),
                 ),

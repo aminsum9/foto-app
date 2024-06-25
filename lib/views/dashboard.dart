@@ -113,7 +113,9 @@ class DashboardState extends State<Dashboard> {
                 padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
                 child: ListView(
                   children: [
-                    const Header(),
+                    Header(
+                      isUserLogin: isUserLogin,
+                    ),
                     const Padding(padding: EdgeInsets.only(bottom: 20)),
                     const Divider(
                       height: 1,
@@ -306,9 +308,10 @@ class DashboardState extends State<Dashboard> {
 class Header extends StatefulWidget {
   @override
   HeaderState createState() => HeaderState();
+  bool? isUserLogin;
 
   @override
-  const Header({super.key});
+  Header({super.key, this.isUserLogin});
 }
 
 class HeaderState extends State<Header> {
@@ -335,9 +338,27 @@ class HeaderState extends State<Header> {
         Container(
           padding: const EdgeInsets.all(10),
           margin: const EdgeInsets.only(left: 15),
-          child: const Text(
-            "",
-            style: TextStyle(color: Colors.white),
+          child: Visibility(
+            visible: widget.isUserLogin == false,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/login');
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                decoration: BoxDecoration(
+                    color: colors.primary,
+                    borderRadius: BorderRadius.circular(10)),
+                child: const Align(
+                  child: Text(
+                    'masuk',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
         Image.asset(

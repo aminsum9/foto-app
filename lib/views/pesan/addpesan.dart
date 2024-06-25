@@ -1,12 +1,15 @@
 import 'dart:convert';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:foto_app/models/project_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:foto_app/functions/host.dart' as host;
 import 'package:foto_app/styles/colors.dart' as colors;
 import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
+import 'package:foto_app/functions/handle_request.dart' as handle_request;
 
 class AddPesan extends StatefulWidget {
   const AddPesan({super.key});
@@ -18,6 +21,8 @@ class AddPesanState extends State<AddPesan> {
   dynamic dataUser;
 
   FilePickerResult? fileSurat;
+  List<ProjectModel> dataProject = [];
+  String? selectedProject;
 
   DateTime tanggalAwal = DateTime.now();
   TimeOfDay waktuAwal = TimeOfDay.now();
@@ -57,8 +62,51 @@ class AddPesanState extends State<AddPesan> {
     getDataUser();
   }
 
+  Future<List<String>> getDataProject(filter) async {
+    var body = {"page": "1", "paging": "10"};
+
+    final response = await handle_request.postData(
+        Uri.parse("${host.BASE_URL}project"), body);
+
+    if (response.statusCode != 200) {
+      return [];
+    }
+
+    var ressponseData = await jsonDecode(response.body);
+
+    List<ProjectModel> ressData = [];
+    List<String> listProjectsString = [];
+
+    if (ressponseData['success'] == true) {
+      for (var i = 0; i < ressponseData['data']['data'].length; i++) {
+        dynamic itemProject = ressponseData['data']['data'][i];
+
+        ressData.add(ProjectModel.fromJson(itemProject));
+      }
+
+      for (var i = 0; i < ressData.length; i++) {
+        ProjectModel itemProject = ressData[i];
+
+        listProjectsString
+            .add("${itemProject.nama as String} (${itemProject.id})");
+      }
+
+      int dataTotal = ressponseData['data']['total'];
+
+      setState(() {
+        dataProject = ressData;
+      });
+
+      return listProjectsString;
+    } else {
+      return listProjectsString;
+    }
+  }
+
   void getDataUser() async {
     String user = await handle_storage.getDataStorage('user');
+
+    controllerSatuanKerja.text = jsonDecode(user)['satuan_kerja'].toString();
 
     setState(() {
       dataUser = jsonDecode(user);
@@ -124,8 +172,6 @@ class AddPesanState extends State<AddPesan> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
-        // ignore: use_build_context_synchronously
-        // Navigator.of(context).pop();
         // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
       } else if (decodedMap['message'] != null) {
@@ -240,6 +286,38 @@ class AddPesanState extends State<AddPesan> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Padding(
+                  padding: EdgeInsets.all(10.0),
+                ),
+                Container(
+                  child: DropdownSearch(
+                    asyncItems: (filter) => getDataProject(filter),
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: "Projek",
+                        hintText: "pilih projek",
+                      ),
+                    ),
+                    compareFn: (i, s) => i == s,
+                    popupProps: PopupPropsMultiSelection.modalBottomSheet(
+                      isFilterOnline: true,
+                      showSelectedItems: true,
+                      showSearchBox: true,
+                      selectionWidget: ((context, item, isSelected) =>
+                          Text(item as String)),
+                      itemBuilder: itemSearch,
+                    ),
+                    selectedItem: selectedProject,
+                    onChanged: (value) => {
+                      setState(() {
+                        selectedProject = value.toString();
+                      })
+                    },
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(10.0),
+                ),
                 TextField(
                   controller: controllerNomorSurat,
                   decoration: InputDecoration(
@@ -259,17 +337,17 @@ class AddPesanState extends State<AddPesan> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0))),
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(10.0),
-                ),
-                TextField(
-                  controller: controllerNamaSurat,
-                  decoration: InputDecoration(
-                      hintText: "masukkan nama surat",
-                      labelText: "Nama Surat",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0))),
-                ),
+                // const Padding(
+                //   padding: EdgeInsets.all(10.0),
+                // ),
+                // TextField(
+                //   controller: controllerNamaSurat,
+                //   decoration: InputDecoration(
+                //       hintText: "masukkan nama surat",
+                //       labelText: "Nama Surat",
+                //       border: OutlineInputBorder(
+                //           borderRadius: BorderRadius.circular(20.0))),
+                // ),
                 const Padding(
                   padding: EdgeInsets.all(10.0),
                 ),
@@ -378,6 +456,7 @@ class AddPesanState extends State<AddPesan> {
                 ),
                 TextField(
                   controller: controllerFotografer,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       hintText: "masukkan fotografer",
                       labelText: "Fotografer",
@@ -389,6 +468,7 @@ class AddPesanState extends State<AddPesan> {
                 ),
                 TextField(
                   controller: controllerVideografer,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       hintText: "masukkan videografer",
                       labelText: "Videografer",
@@ -430,4 +510,24 @@ class AddPesanState extends State<AddPesan> {
       ),
     );
   }
+}
+
+Widget itemSearch(
+  BuildContext context,
+  String item,
+  bool isSelected,
+) {
+  return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: !isSelected
+          ? null
+          : BoxDecoration(
+              border: Border.all(color: Theme.of(context).primaryColor),
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
+            ),
+      child: ListTile(
+        selected: isSelected,
+        title: Text(item ?? ''),
+      ));
 }
