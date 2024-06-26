@@ -236,9 +236,10 @@ class ItemPesan extends StatelessWidget {
     if (item.status == 'Menunggu') {
       colorStatus = Colors.blue;
     } else if (item.status == 'Disetujui') {
+      colorStatus = Colors.orange;
+    } else if (item.status == 'Selesai') {
       colorStatus = Colors.green;
-    }
-    if (item.status == 'Ditolak') {
+    } else if (item.status == 'Ditolak') {
       colorStatus = Colors.red;
     }
 

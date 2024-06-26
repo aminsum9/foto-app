@@ -12,6 +12,7 @@ import 'package:foto_app/functions/handle_storage.dart' as handle_storage;
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
 import 'package:open_file/open_file.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class DetailPesan extends StatefulWidget {
@@ -147,6 +148,32 @@ class DetailPesanState extends State<DetailPesan> {
     } else {
       Fluttertoast.showToast(
           msg: "Gagal mendownload file surat!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
+
+  openUrl(url) async {
+    try {
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url));
+      } else {
+        Fluttertoast.showToast(
+            msg: "Gagal, link tidak dapat dibuka!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    } on Exception {
+      Fluttertoast.showToast(
+          msg: "Gagal, link tidak dapat dibuka!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.TOP,
           timeInSecForIosWeb: 1,
@@ -416,10 +443,16 @@ class DetailPesanState extends State<DetailPesan> {
                                         fontSize: 17.0,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Text(
-                                    widget.pesan.link as String,
-                                    style: const TextStyle(fontSize: 17.0),
-                                  ),
+                                  GestureDetector(
+                                    child: Text(
+                                      widget.pesan.link != null
+                                          ? widget.pesan.link as String
+                                          : '',
+                                      style: const TextStyle(
+                                          fontSize: 17.0, color: Colors.blue),
+                                    ),
+                                    onTap: () => openUrl(widget.pesan.link),
+                                  )
                                 ],
                               ),
                               Row(

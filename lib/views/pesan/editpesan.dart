@@ -72,13 +72,15 @@ class EditPesanState extends State<EditPesan> {
     controllerAcara.text = pesan.acara as String;
     controllerFotografer.text = pesan.fotografer as String;
     controllerVideografer.text = pesan.videografer as String;
-    controllerLink.text = pesan.link as String;
+    controllerLink.text = pesan.link != null ? pesan.link as String : '';
 
     String convertWaktuAwal = await convertTime(pesan.waktu_awal.toString());
     String convertWaktuAkhir = await convertTime(pesan.waktu_akhir.toString());
 
-    DateTime waktuAwalDate = DateTime.parse('2000-01-01 $convertWaktuAwal');
-    DateTime waktuAkhirDate = DateTime.parse('2000-01-01 $convertWaktuAkhir');
+    DateTime waktuAwalDate = DateTime.parse(
+        '2000-01-01 ${convertWaktuAwal.trim().length <= 6 ? "$convertWaktuAwal${"00"}" : convertWaktuAwal}');
+    DateTime waktuAkhirDate = DateTime.parse(
+        '2000-01-01 ${convertWaktuAkhir.trim().length <= 6 ? "$convertWaktuAkhir${"00"}" : convertWaktuAkhir}');
 
     DateTime tanggalAwalData = DateTime.parse(pesan.tanggal_awal.toString());
     TimeOfDay waktuAwalData = TimeOfDay.fromDateTime(waktuAwalDate);
@@ -251,6 +253,10 @@ class EditPesanState extends State<EditPesan> {
 
   Future<List<String>> getDataStatus(filter) async {
     List<String> listStatuses = ['Menunggu', 'Ditolak', 'Disetujui'];
+
+    if (selectedStatus == 'Disetujui') {
+      listStatuses = ['Disetujui', 'Selesai'];
+    }
 
     if (filter != '') {
       var haveAnyValid = listStatuses
@@ -450,22 +456,6 @@ class EditPesanState extends State<EditPesan> {
             //           border: OutlineInputBorder(
             //               borderRadius: BorderRadius.circular(20.0))),
             //     ),
-            //     const Padding(
-            //       padding: EdgeInsets.all(10.0),
-            //     ),
-            //     TextField(
-            //       controller: controllerLink,
-            //       decoration: InputDecoration(
-            //           hintText: "masukkan link",
-            //           labelText: "Link",
-            //           border: OutlineInputBorder(
-            //               borderRadius: BorderRadius.circular(20.0))),
-            //     ),
-            //     const Padding(
-            //       padding: EdgeInsets.all(10.0),
-            //     ),
-            //   ],
-            // ),
             DropdownSearch(
               asyncItems: (filter) => getDataStatus(filter),
               dropdownDecoratorProps: const DropDownDecoratorProps(
@@ -490,6 +480,23 @@ class EditPesanState extends State<EditPesan> {
                 })
               },
             ),
+            Visibility(
+                visible: selectedStatus == 'Selesai',
+                child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(10.0),
+                    ),
+                    TextField(
+                      controller: controllerLink,
+                      decoration: InputDecoration(
+                          hintText: "masukkan link",
+                          labelText: "Link",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0))),
+                    ),
+                  ],
+                ))
           ])),
       bottomNavigationBar: Container(
         margin: const EdgeInsets.only(left: 16, right: 16, bottom: 10),

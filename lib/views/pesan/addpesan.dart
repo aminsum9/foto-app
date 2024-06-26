@@ -22,6 +22,7 @@ class AddPesanState extends State<AddPesan> {
 
   FilePickerResult? fileSurat;
   List<ProjectModel> dataProject = [];
+  ProjectModel? selectedProjectData;
   String? selectedProject;
 
   DateTime tanggalAwal = DateTime.now();
@@ -62,8 +63,29 @@ class AddPesanState extends State<AddPesan> {
     getDataUser();
   }
 
+  void selectProject(String project) {
+    ProjectModel? selectedDataProject;
+    List<String> sltProjectIdSplit = project.split('(');
+    List<String> sltProjectIdSplit2 = sltProjectIdSplit[1].split(')');
+    String sltProjectId = sltProjectIdSplit2[0];
+
+    for (var i = 0; i < dataProject.length; i++) {
+      if (dataProject[i].id == sltProjectId) {
+        selectedDataProject = dataProject[i];
+      }
+    }
+
+    controllerNamaProject.text = selectedDataProject!.nama!.toString();
+    controllerFotografer.text = selectedDataProject.fotografer!.toString();
+    controllerVideografer.text = selectedDataProject.videografer!.toString();
+
+    setState(() {
+      selectedProjectData = selectedDataProject;
+    });
+  }
+
   Future<List<String>> getDataProject(filter) async {
-    var body = {"page": "1", "paging": "10"};
+    var body = {"page": "1", "paging": "10", "keyword": filter};
 
     final response = await handle_request.postData(
         Uri.parse("${host.BASE_URL}project"), body);
@@ -107,6 +129,7 @@ class AddPesanState extends State<AddPesan> {
     String user = await handle_storage.getDataStorage('user');
 
     controllerSatuanKerja.text = jsonDecode(user)['satuan_kerja'].toString();
+    controllerNamaSurat.text = jsonDecode(user)['nama'].toString();
 
     setState(() {
       dataUser = jsonDecode(user);
@@ -308,10 +331,11 @@ class AddPesanState extends State<AddPesan> {
                       itemBuilder: itemSearch,
                     ),
                     selectedItem: selectedProject,
-                    onChanged: (value) => {
+                    onChanged: (value) {
+                      selectProject(value.toString());
                       setState(() {
                         selectedProject = value.toString();
-                      })
+                      });
                     },
                   ),
                 ),
@@ -331,6 +355,7 @@ class AddPesanState extends State<AddPesan> {
                 ),
                 TextField(
                   controller: controllerSatuanKerja,
+                  readOnly: true,
                   decoration: InputDecoration(
                       hintText: "masukkan satuan Kerja",
                       labelText: "Satuan Kerja",
@@ -352,6 +377,7 @@ class AddPesanState extends State<AddPesan> {
                   padding: EdgeInsets.all(10.0),
                 ),
                 TextField(
+                  readOnly: true,
                   controller: controllerNamaProject,
                   decoration: InputDecoration(
                       hintText: "masukkan nama projek",
@@ -362,58 +388,88 @@ class AddPesanState extends State<AddPesan> {
                 const Padding(
                   padding: EdgeInsets.all(10.0),
                 ),
-                TextButton(
-                  onPressed: () {
-                    selectTanggalAwal();
-                  },
-                  child: Card(
-                      child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 14, top: 10, right: 14, bottom: 10),
-                          child: Text(
-                              "Tanggal Awal: ${tanggalAwal.toString().split(' ')[0]}"))),
+                TextField(
+                  controller: controllerFotografer,
+                  keyboardType: TextInputType.number,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                      hintText: "masukkan fotografer",
+                      labelText: "Fotografer",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0))),
                 ),
                 const Padding(
-                  padding: EdgeInsets.all(5.0),
+                  padding: EdgeInsets.all(10.0),
                 ),
-                TextButton(
-                  onPressed: () {
-                    selectWaktuAwal();
-                  },
-                  child: Card(
-                      child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 14, top: 10, right: 14, bottom: 10),
-                          child: Text(
-                              "Waktu Awal: ${waktuAwal.hour}:${waktuAwal.minute}"))),
+                TextField(
+                  controller: controllerVideografer,
+                  keyboardType: TextInputType.number,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                      hintText: "masukkan videografer",
+                      labelText: "Videografer",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0))),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(10.0),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        selectTanggalAwal();
+                      },
+                      child: Card(
+                          child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 14, top: 10, right: 14, bottom: 10),
+                              child: Text(
+                                  "Tanggal Awal: ${tanggalAwal.toString().split(' ')[0]}"))),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        selectWaktuAwal();
+                      },
+                      child: Card(
+                          child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 14, top: 10, right: 14, bottom: 10),
+                              child: Text(
+                                  "${waktuAwal.hour}:${waktuAwal.minute}"))),
+                    ),
+                  ],
                 ),
                 const Padding(
                   padding: EdgeInsets.all(2.0),
                 ),
-                TextButton(
-                  onPressed: () {
-                    selectTanggalAwal();
-                  },
-                  child: Card(
-                      child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 14, top: 10, right: 14, bottom: 10),
-                          child: Text(
-                              "Tanggal Akhir: ${tanggalAkhir.toString().split(' ')[0]}"))),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(2.0),
-                ),
-                TextButton(
-                  onPressed: () {
-                    selectWaktuAkhir();
-                  },
-                  child: Card(
-                      child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 14, top: 10, right: 14, bottom: 10),
-                          child: Text(
-                              "Waktu Akhir: ${waktuAkhir.hour}:${waktuAkhir.minute}"))),
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        selectTanggalAwal();
+                      },
+                      child: Card(
+                          child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 14, top: 10, right: 14, bottom: 10),
+                              child: Text(
+                                  "Tanggal Akhir: ${tanggalAkhir.toString().split(' ')[0]}"))),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        selectWaktuAkhir();
+                      },
+                      child: Card(
+                          child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 14, top: 10, right: 14, bottom: 10),
+                              child: Text(
+                                  "${waktuAkhir.hour}:${waktuAkhir.minute}"))),
+                    ),
+                  ],
                 ),
                 const Padding(
                   padding: EdgeInsets.all(5.0),
@@ -454,41 +510,17 @@ class AddPesanState extends State<AddPesan> {
                 const Padding(
                   padding: EdgeInsets.all(10.0),
                 ),
-                TextField(
-                  controller: controllerFotografer,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                      hintText: "masukkan fotografer",
-                      labelText: "Fotografer",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0))),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(10.0),
-                ),
-                TextField(
-                  controller: controllerVideografer,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                      hintText: "masukkan videografer",
-                      labelText: "Videografer",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0))),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(10.0),
-                ),
-                TextField(
-                  controller: controllerLink,
-                  decoration: InputDecoration(
-                      hintText: "masukkan link",
-                      labelText: "Link",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0))),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(10.0),
-                ),
+                // TextField(
+                //   controller: controllerLink,
+                //   decoration: InputDecoration(
+                //       hintText: "masukkan link",
+                //       labelText: "Link",
+                //       border: OutlineInputBorder(
+                //           borderRadius: BorderRadius.circular(20.0))),
+                // ),
+                // const Padding(
+                //   padding: EdgeInsets.all(10.0),
+                // ),
               ],
             ),
           ])),
